@@ -1,0 +1,4 @@
+# files not to be tracked
+*.DS_Store
+*.Rproj*
+processed_data/GRTE_rasters/*

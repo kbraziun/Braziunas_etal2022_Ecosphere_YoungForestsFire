@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<metadata>
+	<idinfo>
+		<citation>
+			<citeinfo>
+				<origin>USBR Remote Sensing and GIS Group, Denver, Colorado</origin>
+				<pubdate>Unpublished Material</pubdate>
+				<pubtime>Unknown</pubtime>
+				<title>Grand Teton National Park Vegetation Mapping Project 2003 Vegetation Plots</title>
+				<edition>None</edition>
+				<geoform Sync="TRUE">vector digital data</geoform>
+				<serinfo>
+					<sername>None</sername>
+					<issue>None</issue>
+				</serinfo>
+				<pubinfo>
+					<pubplace>None</pubplace>
+					<publish>None</publish>
+				</pubinfo>
+				<othercit>None</othercit>
+				<onlink>None</onlink>
+				<ftname Sync="TRUE">Plots_2003</ftname></citeinfo>
+		</citation>
+		<descript>
+			<abstract>This metadata is for the 2003 vegetation data points spatial database created at/for Grand Teton National Park, Wyoming.</abstract>
+			<purpose>Plots were collected to characterize the vegetation at Grand Teton National Park and vicinity. This GIS layer was created from the GPS coordinates recorded at the center of each plot to map their distribution and location in the Park.</purpose>
+			<supplinf>This GIS layer was created from the GPS coordinates recorded at the center of each plot.</supplinf>
+			<langdata Sync="TRUE">en</langdata></descript>
+		<timeperd>
+			<timeinfo>
+				<sngdate>
+					<caldate>2003</caldate>
+				</sngdate>
+			</timeinfo>
+			<current>ground condition</current>
+		</timeperd>
+		<status>
+			<progress>Complete</progress>
+			<update>None planned</update>
+		</status>
+		<spdom>
+			<bounding>
+				<westbc Sync="TRUE">-110.926169</westbc>
+				<eastbc Sync="TRUE">-110.426009</eastbc>
+				<northbc Sync="TRUE">44.133579</northbc>
+				<southbc Sync="TRUE">43.557489</southbc>
+			</bounding>
+			<lboundng><leftbc Sync="TRUE">505963.000000</leftbc><rightbc Sync="TRUE">545917.000000</rightbc><bottombc Sync="TRUE">4822883.000000</bottombc><topbc Sync="TRUE">4886712.000000</topbc></lboundng></spdom>
+		<keywords>
+			<theme>
+				<themekt>None</themekt>
+				<themekey>Field Plots</themekey>
+				<themekey>Ground Data</themekey>
+				<themekey>Land Cover</themekey>
+				<themekey>Point</themekey>
+				<themekey>Vegetation</themekey>
+				<themekey>National Park Service</themekey>
+			</theme>
+			<place>
+				<placekt>None</placekt>
+				<placekey>Grand Teton National Park</placekey>
+				<placekey>John D. Rockefeller National Parkway</placekey>
+				<placekey>Wyoming</placekey>
+				<placekey>Jackson Hole</placekey>
+			</place>
+			<stratum>
+				<stratkt>None</stratkt>
+				<stratkey>None</stratkey>
+			</stratum>
+			<temporal>
+				<tempkt>None</tempkt>
+				<tempkey>2003</tempkey>
+			</temporal>
+		</keywords>
+		<accconst>None</accconst>
+		<useconst>Acknowledgment of the USBR Remote Sensing and GIS Group would be appreciated in products derived from these data. Any person using the information presented here should fully understand the data collection and compilation process before beginning their analysis/use. The burden of determining fitness for use lies with the user.</useconst>
+		<ptcontac>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>Bureau of Reclamation</cntorg>
+					<cntper>Mike Pucherelli</cntper>
+				</cntorgp>
+				<cntpos>Group Manager</cntpos>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>P.O. Box 25007 Bldg. 56 Denver Federal Center M.S. D-8260</address>
+					<city>Denver</city>
+					<state>Colorado</state>
+					<postal>80225</postal>
+					<country>United States of America</country>
+				</cntaddr>
+				<cntvoice>303-445-2267</cntvoice>
+				<cnttdd>None</cnttdd>
+				<cntfax>303-445-6337</cntfax>
+				<cntemail>mpucherelli@do.usbr.gov</cntemail>
+				<hours>8 am - 5 pm</hours>
+				<cntinst>None</cntinst>
+			</cntinfo>
+		</ptcontac>
+		<browse>
+			<browsen>None</browsen>
+			<browsed>None</browsed>
+			<browset>None</browset>
+		</browse>
+		<datacred>USBR Remote Sensing and GIS Group: David Salas,Trudy Meyer, and Mike Pucherelli. Others: Dan Cogan (Cogan Technology Inc.) and Gwen Kittle (Nature Serve).</datacred>
+		<secinfo>
+			<secsys>None</secsys>
+			<secclass>Unclassified</secclass>
+			<sechandl>None</sechandl>
+		</secinfo>
+		<native Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 2; ESRI ArcCatalog 9.1.0.722</native>
+		<crossref>
+			<citeinfo>
+				<title>None</title>
+			</citeinfo>
+		</crossref>
+		<natvform Sync="TRUE">Shapefile</natvform></idinfo>
+	<dataqual>
+		<attracc>
+			<attraccr>Positional accuracy is only as good as the GPS receiver used. Thematic accuracy was not checked for this layer. Thematic data was collected on the ground by trained ecologists.</attraccr>
+			<qattracc>
+				<attraccv>None</attraccv>
+				<attracce>None</attracce>
+			</qattracc>
+		</attracc>
+		<logic>All point features were checked for uniqueness and for correct and complete attributing.</logic>
+		<complete>All field plots collected in 2002 at Grand Teton National Park are included in this coverage.</complete>
+		<posacc>
+			<horizpa>
+				<horizpar>GPS accuracy varies for each plot. PDOP error values were recorded.</horizpar>
+				<qhorizpa>
+					<horizpav>PDOP +/-</horizpav>
+					<horizpae>Uncorrected GPS Points Recorded with a Trimble GeoExplorer.</horizpae>
+				</qhorizpa>
+			</horizpa>
+			<vertacc>
+				<vertaccr>GPS accuracy varies for each plot. PDOP error values were recorded.</vertaccr>
+				<qvertpa>
+					<vertaccv>PDOP +/-</vertaccv>
+					<vertacce>Uncorrected GPS Points Recorded with a Trimble GeoExplorer.</vertacce>
+				</qvertpa>
+			</vertacc>
+		</posacc>
+		<lineage>
+			<srcinfo>
+				<srccite>
+					<citeinfo>
+						<title>None</title>
+					</citeinfo>
+				</srccite>
+				<srcscale>None</srcscale>
+				<typesrc>paper</typesrc>
+				<srctime>
+					<timeinfo>
+						<sngdate>
+							<caldate>2002</caldate>
+						</sngdate>
+					</timeinfo>
+					<srccurr>ground condition</srccurr>
+				</srctime>
+				<srccitea>None</srccitea>
+				<srccontr>None</srccontr>
+			</srcinfo>
+			<procstep>
+				<procdesc>Plots were subjectively placed by qualified ecologists to characterize the plant communities. Portions of the methodology were derived from the USGS/NPS Vegetation Mapping Program's Field Methods for Vegetation Mapping standard. Vegetation data in each sample plot was recorded by qualified ecologists using a standard NVC plot data collection form. Data was manually transferred to a MS Access database. Point coverage was created by importing the database into ArcView as an event theme.</procdesc>
+				<srcused>None</srcused>
+				<procdate>Unknown</procdate>
+				<proctime>Unknown</proctime>
+				<srcprod>None</srcprod>
+			</procstep>
+			<procstep>
+				<procdesc>Metadata imported.</procdesc>
+				<srcused>C:\Projects\nps\grte\CD\GIS_Data\NAD83\Vegetation_Data\Field_Plots\2002_Plots\Spatial_data\metadata.xml</srcused>
+			</procstep>
+			<procstep>
+				<procdesc>Metadata imported.</procdesc>
+				<srcused>C:\Projects\nps\grte\CD\GIS_Data\NAD83\Vegetation_Data\Field_Plots\2002_Plots\Spatial_data\2002_plots_cov\plots_2002\metadata.xml</srcused>
+			</procstep>
+			<procstep><procdesc Sync="TRUE">Metadata imported.</procdesc><srcused Sync="TRUE">C:\DOCUME~1\DANCOG~1\LOCALS~1\Temp\xml61.tmp</srcused><date Sync="TRUE">20051229</date><time Sync="TRUE">11082800</time></procstep></lineage>
+		<cloud>None</cloud>
+	</dataqual>
+	<spdoinfo>
+		<direct Sync="TRUE">Vector</direct>
+		<ptvctinf><esriterm Name="Plots_2003"><efeatyp Sync="TRUE">Simple</efeatyp><efeageom code="1" Sync="TRUE"></efeageom><esritopo Sync="TRUE">FALSE</esritopo><efeacnt Sync="TRUE">313</efeacnt><spindex Sync="TRUE">TRUE</spindex><linrefer Sync="TRUE">FALSE</linrefer></esriterm></ptvctinf></spdoinfo>
+	<spref>
+		<horizsys>
+			<planar>
+				<planci>
+					<plance Sync="TRUE">coordinate pair</plance>
+					<coordrep>
+						<absres Sync="TRUE">0.000128</absres>
+						<ordres Sync="TRUE">0.000128</ordres>
+					</coordrep>
+					<plandu Sync="TRUE">meters</plandu>
+				</planci>
+			</planar>
+			<geodetic>
+				<horizdn Sync="TRUE">North American Datum of 1983</horizdn>
+				<ellips Sync="TRUE">Geodetic Reference System 80</ellips>
+				<semiaxis Sync="TRUE">6378137.000000</semiaxis>
+				<denflat Sync="TRUE">298.257222</denflat>
+			</geodetic>
+			<cordsysn><geogcsn Sync="TRUE">GCS_North_American_1983</geogcsn><projcsn Sync="TRUE">NAD_1983_UTM_Zone_12N</projcsn></cordsysn></horizsys>
+	</spref>
+	<eainfo>
+		<detailed Name="Plots_2003">
+			<enttyp>
+				<enttypl Sync="TRUE">Plots_2003</enttypl>
+				<enttypt Sync="TRUE">Feature Class</enttypt><enttypc Sync="TRUE">313</enttypc></enttyp>
+			<attr>
+				<attrlabl>FID</attrlabl>
+				<attrdef>Internal feature number.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<udom>Sequential unique whole numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">FID</attalias><attrtype Sync="TRUE">OID</attrtype><attwidth Sync="TRUE">4</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>Shape</attrlabl>
+				<attrdef>Feature geometry.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<udom>Coordinates defining the features.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">Shape</attalias><attrtype Sync="TRUE">Geometry</attrtype><attwidth Sync="TRUE">0</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>PLOT_CODE</attrlabl>
+				<attrdef>Unique Code Used to Identify Plots</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">10</attwidth><attalias Sync="TRUE">PLOT_CODE</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>PROV_NAME</attrlabl>
+				<attrdef>Provisional Name of Plant Association Recorded by Field Crew</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">133</attwidth><attalias Sync="TRUE">PROV_NAME</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ELCODE</attrlabl>
+				<attrdef>NVCS CODE for Plant Association</attrdef>
+				<attrdefs>NatureServe</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">14</attwidth><attalias Sync="TRUE">ELCODE</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>CLASS_NAME</attrlabl>
+				<attrdef>Classified Plant Association Name</attrdef>
+				<attrdefs>NatureServe</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">116</attwidth><attalias Sync="TRUE">CLASS_NAME</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>AIR_PHOTO</attrlabl>
+				<attrdef>Corresponding Aerial Photo Number</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">5</attwidth><attalias Sync="TRUE">AIR_PHOTO</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>SUBLOC</attrlabl>
+				<attrdef>Sub-location of the Point in the Park</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">59</attwidth><attalias Sync="TRUE">SUBLOC</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>QUAD</attrlabl>
+				<attrdef>Name of the USGS Quadrangle</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">18</attwidth><attalias Sync="TRUE">QUAD</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>GPS</attrlabl>
+				<attrdef>Internal Numbering of GPS Waypoint Files</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">12</attwidth><attalias Sync="TRUE">GPS</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>GPS_TECH</attrlabl>
+				<attrdef>Description of the GPS Unit</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrvai></attrvai>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">7</attwidth><attalias Sync="TRUE">GPS_TECH</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>FIELD_X</attrlabl>
+				<attrdef>UTM X Value as Recorded in the Field</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrvai></attrvai>
+				<attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">6</attwidth><attalias Sync="TRUE">FIELD_X</attalias><atprecis Sync="TRUE">6</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>FIELD_Y</attrlabl>
+				<attrdef>UTM Y Value as Recorded in the Field</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">7</attwidth><attalias Sync="TRUE">FIELD_Y</attalias><atprecis Sync="TRUE">7</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>X_NAD83</attrlabl>
+				<attrdef>Re-projected NAD83 UTM X Value</attrdef>
+				<attrdefs>U.S. Bureau of Reclamation</attrdefs>
+				<attrvai>
+					<attrvae>UTM Values were reprojected to NAD83 by USBR using NADCON for those points recorded in UTM NAD27.</attrvae>
+				</attrvai>
+				<attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">6</attwidth><attalias Sync="TRUE">X_NAD83</attalias><atprecis Sync="TRUE">6</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>Y_NAD83</attrlabl>
+				<attrdef>Re-projected NAD83 UTM Y Value</attrdef>
+				<attrdefs>U.S. Bureau of Reclamation</attrdefs>
+				<attrvai>
+					<attrvae>UTM Values were reprojected to NAD83 by USBR using NADCON for those points recorded in UTM NAD27.</attrvae>
+				</attrvai>
+				<attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">7</attwidth><attalias Sync="TRUE">Y_NAD83</attalias><atprecis Sync="TRUE">7</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>UTM_ZONE</attrlabl>
+				<attrdef>UTM Zone</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">UTM_ZONE</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>DATE</attrlabl>
+				<attrdef>Date of Data Collection</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">8</attwidth><attalias Sync="TRUE">DATE</attalias><atprecis Sync="TRUE">8</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>SURVEYORS</attrlabl>
+				<attrdef>Names of the Surveyors Who Collected the Data</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">5</attwidth><attalias Sync="TRUE">SURVEYORS</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>XDIM</attrlabl>
+				<attrdef>X Dimension of Field Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">XDIM</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>YDIM</attrlabl>
+				<attrdef>Y Dimension of Field Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">YDIM</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>PLOT_SHAPE</attrlabl>
+				<attrdef>Overall Shape of the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">9</attwidth><attalias Sync="TRUE">PLOT_SHAPE</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>PHOTOS</attrlabl>
+				<attrdef>Corresponding Ground Photos</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">PHOTOS</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ROLL</attrlabl>
+				<attrdef>Roll of Film used to Take Ground Photos</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">32</attwidth><attalias Sync="TRUE">ROLL</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>PERMANENT</attrlabl>
+				<attrdef>Is the Point Permanently Marked in the Field (Yes/No)</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth><attalias Sync="TRUE">PERMANENT</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>REPRESENT</attrlabl>
+				<attrdef>Description of How Representative the Point is of the Surrounding Vegetation or Polygon</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">254</attwidth><attalias Sync="TRUE">REPRESENT</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>SUCCESSION</attrlabl>
+				<attrdef>Comments on the Succession of the Vegetation in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">5</attwidth><attalias Sync="TRUE">SUCCESSION</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ELEV</attrlabl>
+				<attrdef>Elevation of the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">5</attwidth><attalias Sync="TRUE">ELEV</attalias><atprecis Sync="TRUE">5</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ELEV_UNITS</attrlabl>
+				<attrdef>Units of the Elevation Values (feet/meters)</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">4</attwidth><attalias Sync="TRUE">ELEV_UNITS</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>SLOPE</attrlabl>
+				<attrdef>Degree of Slope in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">SLOPE</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ASPECT</attrlabl>
+				<attrdef>General Aspect of the Plot in Degrees</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">3</attwidth><attalias Sync="TRUE">ASPECT</attalias><atprecis Sync="TRUE">3</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>TOPO_POS</attrlabl>
+				<attrdef>General Position of the Plot on the Landscape</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">13</attwidth><attalias Sync="TRUE">TOPO_POS</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>LANDFORM</attrlabl>
+				<attrdef>General Landform that the Plot Occurs On</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">5</attwidth><attalias Sync="TRUE">LANDFORM</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>GEOLOGY</attrlabl>
+				<attrdef>Presence of any Geological Features</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">5</attwidth><attalias Sync="TRUE">GEOLOGY</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>COWARDIN</attrlabl>
+				<attrdef>General Wetland Description</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">10</attwidth><attalias Sync="TRUE">COWARDIN</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>HYDRO</attrlabl>
+				<attrdef>Comments on the Hydrology of the Soils in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">23</attwidth><attalias Sync="TRUE">HYDRO</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ENVIRO</attrlabl>
+				<attrdef>General Environmental Comments about the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">138</attwidth><attalias Sync="TRUE">ENVIRO</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>LANDSCAPE</attrlabl>
+				<attrdef>General Landscape Comments about the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">254</attwidth><attalias Sync="TRUE">LANDSCAPE</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>TEXTURE</attrlabl>
+				<attrdef>Soil Texture in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">15</attwidth><attalias Sync="TRUE">TEXTURE</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>DRAINAGE</attrlabl>
+				<attrdef>Comments on the Soil Drainage within the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">23</attwidth><attalias Sync="TRUE">DRAINAGE</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZBEDROCK</attrlabl>
+				<attrdef>Percent (%) of Bedrock in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">1</attwidth><attalias Sync="TRUE">ZBEDROCK</attalias><atprecis Sync="TRUE">1</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZLROCKS</attrlabl>
+				<attrdef>Percent (%) of Large Rocks in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">ZLROCKS</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZSROCKS</attrlabl>
+				<attrdef>Percent (%) of Small Rocks in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">ZSROCKS</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZSAND</attrlabl>
+				<attrdef>Percent (%) of Sand in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">ZSAND</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZLITTER</attrlabl>
+				<attrdef>Percent (%) of Litter in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">3</attwidth><attalias Sync="TRUE">ZLITTER</attalias><atprecis Sync="TRUE">3</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZWOOD</attrlabl>
+				<attrdef>Percent (%) of Dead and Down Wood in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">ZWOOD</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZWATER</attrlabl>
+				<attrdef>Percent (%) of Standing Water in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">1</attwidth><attalias Sync="TRUE">ZWATER</attalias><atprecis Sync="TRUE">1</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZBARESOIL</attrlabl>
+				<attrdef>Percent (%) of Bare Soil in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">ZBARESOIL</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZOTHER</attrlabl>
+				<attrdef>Percent (%) of Other Non-vegetated Item in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">ZOTHER</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OTHER</attrlabl>
+				<attrdef>Description of the Other Category used in Cover Classes</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">14</attwidth><attalias Sync="TRUE">OTHER</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZFUNGI</attrlabl>
+				<attrdef>Percent (%) of Fungi in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">1</attwidth><attalias Sync="TRUE">ZFUNGI</attalias><atprecis Sync="TRUE">1</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZMOSS</attrlabl>
+				<attrdef>Percent (%) of Moss in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">ZMOSS</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ZLICHEN</attrlabl>
+				<attrdef>Percent (%) of Lichen in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">ZLICHEN</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>PHENOLOGY</attrlabl>
+				<attrdef>Phenology of the Dominant Stratum in the Plot</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">15</attwidth><attalias Sync="TRUE">PHENOLOGY</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>LEAF_TYPE</attrlabl>
+				<attrdef>General Leaf Type of the Dominant Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">13</attwidth><attalias Sync="TRUE">LEAF_TYPE</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>PHYSIO</attrlabl>
+				<attrdef>Physiognomic Description of the Dominant Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">21</attwidth><attalias Sync="TRUE">PHYSIO</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>T1_HGT</attrlabl>
+				<attrdef>Height of the Emergent Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">3</attwidth><attalias Sync="TRUE">T1_HGT</attalias><atprecis Sync="TRUE">3</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>T1_COVER</attrlabl>
+				<attrdef>Relative Percent Cover of the Emergent Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">T1_COVER</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>T2_HGT</attrlabl>
+				<attrdef>Height of the Canopy Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">3</attwidth><attalias Sync="TRUE">T2_HGT</attalias><atprecis Sync="TRUE">3</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>T2_COVER</attrlabl>
+				<attrdef>Relative Percent Cover of the Canopy Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">T2_COVER</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>T3_HGT</attrlabl>
+				<attrdef>Height of the Sub-canopy Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">T3_HGT</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>T3_COVER</attrlabl>
+				<attrdef>Relative Percent Cover of the Sub-Canopy Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">T3_COVER</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>S1_HGT</attrlabl>
+				<attrdef>Height of the Tall Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">S1_HGT</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>S1_COVER</attrlabl>
+				<attrdef>Relative Percent Cover of the Tall Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">S1_COVER</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>S2_HGT</attrlabl>
+				<attrdef>Height of the Short Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">S2_HGT</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>S2_COVER</attrlabl>
+				<attrdef>Relative Percent Cover of the Short Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">3</attwidth><attalias Sync="TRUE">S2_COVER</attalias><atprecis Sync="TRUE">3</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>S3_HGT</attrlabl>
+				<attrdef>Height of the Dwarf Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">1</attwidth><attalias Sync="TRUE">S3_HGT</attalias><atprecis Sync="TRUE">1</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>S3_COVER</attrlabl>
+				<attrdef>Relative Percent Cover of the Dwarf Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">S3_COVER</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>H_HGT</attrlabl>
+				<attrdef>Height of the Herbaceous Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">1</attwidth><attalias Sync="TRUE">H_HGT</attalias><atprecis Sync="TRUE">1</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>H_COVER</attrlabl>
+				<attrdef>Relative Percent Cover of the Herbaceous Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">3</attwidth><attalias Sync="TRUE">H_COVER</attalias><atprecis Sync="TRUE">3</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>N_HGT</attrlabl>
+				<attrdef>Height of the Non-vascular Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">1</attwidth><attalias Sync="TRUE">N_HGT</attalias><atprecis Sync="TRUE">1</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>N_COVER</attrlabl>
+				<attrdef>Relative Percent Cover of the Non-vascular Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">SmallInteger</attrtype><attwidth Sync="TRUE">2</attwidth><attalias Sync="TRUE">N_COVER</attalias><atprecis Sync="TRUE">2</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>ANIMAL_USE</attrlabl>
+				<attrdef>Evidence of Any Animal Use in the Area</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">178</attwidth><attalias Sync="TRUE">ANIMAL_USE</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>DISTURB</attrlabl>
+				<attrdef>Evidence of Any Disturbance in the Area</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">167</attwidth><attalias Sync="TRUE">DISTURB</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>COMMENTS</attrlabl>
+				<attrdef>General Comments About the Data Collection</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">227</attwidth><attalias Sync="TRUE">COMMENTS</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPTIONAL</attrlabl>
+				<attrdef>Description of the Optional Fields</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">103</attwidth><attalias Sync="TRUE">OPTIONAL</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT1</attrlabl>
+				<attrdef>Description of the Plot Type</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">13</attwidth><attalias Sync="TRUE">OPT1</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT2</attrlabl>
+				<attrdef>Dominant Species in the Emergent Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">37</attwidth><attalias Sync="TRUE">OPT2</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT3</attrlabl>
+				<attrdef>Dominant Species in the Canopy Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">57</attwidth><attalias Sync="TRUE">OPT3</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT4</attrlabl>
+				<attrdef>Dominant Species in the Sub-canopy Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">37</attwidth><attalias Sync="TRUE">OPT4</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT5</attrlabl>
+				<attrdef>Dominant Species in the Tall Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">57</attwidth><attalias Sync="TRUE">OPT5</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT6</attrlabl>
+				<attrdef>Dominant Species in the Short Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">90</attwidth><attalias Sync="TRUE">OPT6</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT7</attrlabl>
+				<attrdef>Dominant Species in the Dwarf Shrub Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">60</attwidth><attalias Sync="TRUE">OPT7</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT8</attrlabl>
+				<attrdef>Dominant Species in the Herbaceous Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">98</attwidth><attalias Sync="TRUE">OPT8</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>OPT9</attrlabl>
+				<attrdef>Dominant Species in the Non-vascular Stratum</attrdef>
+				<attrdefs>Grand Teton National Park</attrdefs>
+				<attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">46</attwidth><attalias Sync="TRUE">OPT9</attalias><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+		</detailed>
+		<overview>
+			<eaover>Attributes were either generated by ArcInfo or assigned by Grand Teton National Park or the USBR Remote Sensing GIS Group.</eaover>
+			<eadetcit>Grand Teton National Park Vegetation Mapping Project Final Report (DOI - USGS/USBR)</eadetcit>
+		</overview>
+	</eainfo>
+	<distinfo>
+		<distrib>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>Bureau of Reclamation</cntorg>
+					<cntper>Mike Pucherelli</cntper>
+				</cntorgp>
+				<cntpos>Group Manager</cntpos>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>P.O. Box 25007 Bldg. 56 Denver Federal Center M.S. D-8260</address>
+					<city>Denver</city>
+					<state>Colorado</state>
+					<postal>80225</postal>
+					<country>United States of America</country>
+				</cntaddr>
+				<cntvoice>303-445-2267</cntvoice>
+				<cnttdd>None</cnttdd>
+				<cntfax>303-445-6337</cntfax>
+				<cntemail>mpucherelli@do.usbr.gov</cntemail>
+				<hours>8 am - 5 pm</hours>
+				<cntinst>None</cntinst>
+			</cntinfo>
+		</distrib>
+		<resdesc>Downloadable Data</resdesc>
+		<distliab>None</distliab>
+		<stdorder>
+			<digform>
+				<digtinfo>
+					<transize>0.656</transize>
+					<dssize Sync="TRUE">0.007</dssize></digtinfo>
+			</digform>
+			<fees>None</fees>
+			<ordering>None</ordering>
+			<turnarnd>Unknown</turnarnd>
+		</stdorder>
+		<custom>None</custom>
+		<techpreq>Unknown</techpreq>
+		<availabl>
+			<timeinfo>
+				<sngdate>
+					<caldate>unknown</caldate>
+				</sngdate>
+			</timeinfo>
+		</availabl>
+	</distinfo>
+	<metainfo>
+		<metd Sync="TRUE">20051229</metd>
+		<metrd>Unknown</metrd>
+		<metfrd>None Planned</metfrd>
+		<metc>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>Cogan Technology Inc.</cntorg>
+					<cntper>Dan Cogan</cntper>
+				</cntorgp>
+				<cntpos>Vice-president</cntpos>
+				<cntaddr>
+					<addrtype>mailing and physical address</addrtype>
+					<address>21 Valley Road</address>
+					<city>Galena</city>
+					<state>Illinois</state>
+					<postal>61036</postal>
+					<country>United States of America</country>
+				</cntaddr>
+				<cntvoice>303-910-9768</cntvoice>
+				<cnttdd>None</cnttdd>
+				<cntfax>None</cntfax>
+				<cntemail>dancogan@cogantech.com</cntemail>
+				<hours>8 am - 5 pm</hours>
+				<cntinst>None</cntinst>
+			</cntinfo>
+		</metc>
+		<metstdn Sync="TRUE">FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+		<metstdv Sync="TRUE">FGDC-STD-001-1998</metstdv>
+		<mettc Sync="TRUE">local time</mettc>
+		<metac>None</metac>
+		<metuc>None</metuc>
+		<metsi>
+			<metscs>None</metscs>
+			<metsc>Unclassified</metsc>
+			<metshd>None</metshd>
+		</metsi>
+		<metextns>
+			<onlink>http://www.esri.com/metadata/esriprof80.html</onlink>
+			<metprof>ESRI Metadata Profile</metprof>
+		</metextns>
+		<langmeta Sync="TRUE">en</langmeta></metainfo>
+	<Esri><MetaID>{A524B48D-AF5D-40CB-8B37-66973C8371BD}</MetaID><CreaDate>20051229</CreaDate><CreaTime>11082800</CreaTime><SyncOnce>FALSE</SyncOnce><SyncDate>20190531</SyncDate><SyncTime>10372700</SyncTime><ModDate>20190531</ModDate><ModTime>10372700</ModTime><DataProperties><itemProps><itemName Sync="TRUE">Plots_2003</itemName><imsContentType Sync="TRUE">002</imsContentType><nativeExtBox><westBL Sync="TRUE">505963.000000</westBL><eastBL Sync="TRUE">545917.000000</eastBL><southBL Sync="TRUE">4822883.000000</southBL><northBL Sync="TRUE">4886712.000000</northBL><exTypeCode Sync="TRUE">1</exTypeCode></nativeExtBox><itemSize Sync="TRUE">0.007</itemSize><itemLocation><linkage Sync="TRUE">file://\\LAPTOP-L4S7MKL8\C$\Users\kristin\Documents\PhD\GRTE_LiDAR\data\GRTE_Vegmap_Plots\2003_Plots\Spatial_data\2003_plots_shpf\Plots_2003.shp</linkage><protocol Sync="TRUE">Local Area Network</protocol></itemLocation></itemProps><coordRef><type Sync="TRUE">Projected</type><geogcsn Sync="TRUE">GCS_North_American_1983</geogcsn><csUnits Sync="TRUE">Linear Unit: Meter (1.000000)</csUnits><projcsn Sync="TRUE">NAD_1983_UTM_Zone_12N</projcsn><peXml Sync="TRUE">&lt;ProjectedCoordinateSystem xsi:type='typens:ProjectedCoordinateSystem' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:typens='http://www.esri.com/schemas/ArcGIS/10.6'&gt;&lt;WKT&gt;PROJCS[&amp;quot;NAD_1983_UTM_Zone_12N&amp;quot;,GEOGCS[&amp;quot;GCS_North_American_1983&amp;quot;,DATUM[&amp;quot;D_North_American_1983&amp;quot;,SPHEROID[&amp;quot;GRS_1980&amp;quot;,6378137.0,298.257222101]],PRIMEM[&amp;quot;Greenwich&amp;quot;,0.0],UNIT[&amp;quot;Degree&amp;quot;,0.0174532925199433]],PROJECTION[&amp;quot;Transverse_Mercator&amp;quot;],PARAMETER[&amp;quot;False_Easting&amp;quot;,500000.0],PARAMETER[&amp;quot;False_Northing&amp;quot;,0.0],PARAMETER[&amp;quot;Central_Meridian&amp;quot;,-111.0],PARAMETER[&amp;quot;Scale_Factor&amp;quot;,0.9996],PARAMETER[&amp;quot;Latitude_Of_Origin&amp;quot;,0.0],UNIT[&amp;quot;Meter&amp;quot;,1.0],AUTHORITY[&amp;quot;EPSG&amp;quot;,26912]]&lt;/WKT&gt;&lt;XOrigin&gt;-5120900&lt;/XOrigin&gt;&lt;YOrigin&gt;-9998100&lt;/YOrigin&gt;&lt;XYScale&gt;450445547.3910538&lt;/XYScale&gt;&lt;ZOrigin&gt;-100000&lt;/ZOrigin&gt;&lt;ZScale&gt;10000&lt;/ZScale&gt;&lt;MOrigin&gt;-100000&lt;/MOrigin&gt;&lt;MScale&gt;10000&lt;/MScale&gt;&lt;XYTolerance&gt;0.001&lt;/XYTolerance&gt;&lt;ZTolerance&gt;0.001&lt;/ZTolerance&gt;&lt;MTolerance&gt;0.001&lt;/MTolerance&gt;&lt;HighPrecision&gt;true&lt;/HighPrecision&gt;&lt;WKID&gt;26912&lt;/WKID&gt;&lt;LatestWKID&gt;26912&lt;/LatestWKID&gt;&lt;/ProjectedCoordinateSystem&gt;</peXml></coordRef></DataProperties></Esri><dataIdInfo><envirDesc Sync="TRUE"> Version 6.2 (Build 9200) ; Esri ArcGIS 10.6.0.8321</envirDesc><dataLang><languageCode Sync="TRUE" value="eng"></languageCode><countryCode value="USA" Sync="TRUE"></countryCode></dataLang><idCitation><resTitle Sync="TRUE">Plots_2003</resTitle><presForm><PresFormCd Sync="TRUE" value="005"></PresFormCd></presForm></idCitation><spatRpType><SpatRepTypCd Sync="TRUE" value="001"></SpatRepTypCd></spatRpType><dataExt><geoEle><GeoBndBox esriExtentType="native"><westBL Sync="TRUE">505963</westBL><eastBL Sync="TRUE">545917</eastBL><northBL Sync="TRUE">4886712</northBL><southBL Sync="TRUE">4822883</southBL><exTypeCode Sync="TRUE">1</exTypeCode></GeoBndBox></geoEle></dataExt><geoBox esriExtentType="decdegrees"><westBL Sync="TRUE">-110.926169</westBL><eastBL Sync="TRUE">-110.426009</eastBL><northBL Sync="TRUE">44.133579</northBL><southBL Sync="TRUE">43.557489</southBL><exTypeCode Sync="TRUE">1</exTypeCode></geoBox><dataExt><geoEle><GeoBndBox esriExtentType="search"><exTypeCode Sync="TRUE">1</exTypeCode><westBL Sync="TRUE">-110.926169</westBL><eastBL Sync="TRUE">-110.426009</eastBL><northBL Sync="TRUE">44.133579</northBL><southBL Sync="TRUE">43.557489</southBL></GeoBndBox></geoEle></dataExt></dataIdInfo><mdLang><languageCode Sync="TRUE" value="eng"></languageCode><countryCode value="USA" Sync="TRUE"></countryCode></mdLang><mdStanName Sync="TRUE">ISO 19115 Geographic Information - Metadata</mdStanName><mdStanVer Sync="TRUE">DIS_ESRI1.0</mdStanVer><mdChar><CharSetCd Sync="TRUE" value="006"></CharSetCd></mdChar><mdHrLv><ScopeCd Sync="TRUE" value="005"></ScopeCd></mdHrLv><mdHrLvName Sync="TRUE">dataset</mdHrLvName><distInfo><distributor><distorTran><onLineSrc><orDesc Sync="TRUE">002</orDesc><linkage Sync="TRUE">file://\\COGANNB1\C\Projects\nps\grte\CD\GIS_Data\NAD83\Vegetation_Data\Field_Plots\2003_Plots\Spatial_data\2003_plots_shpf\Plots_2003.shp</linkage><protocol Sync="TRUE">Local Area Network</protocol></onLineSrc><transSize Sync="TRUE">0.007</transSize></distorTran><distorFormat><formatName Sync="TRUE">Shapefile</formatName></distorFormat></distributor><distFormat><formatName Sync="TRUE">Shapefile</formatName></distFormat><distTranOps><transSize Sync="TRUE">0.007</transSize></distTranOps></distInfo><refSysInfo><RefSystem><refSysID><identCode Sync="TRUE" code="26912">NAD_1983_UTM_Zone_12N</identCode><idCodeSpace Sync="TRUE">EPSG</idCodeSpace><idVersion Sync="TRUE">6.13(3.0.1)</idVersion></refSysID></RefSystem></refSysInfo><spatRepInfo><VectSpatRep><geometObjs Name="Plots_2003"><geoObjTyp><GeoObjTypCd value="004" Sync="TRUE"></GeoObjTypCd></geoObjTyp><geoObjCnt Sync="TRUE">313</geoObjCnt></geometObjs><topLvl><TopoLevCd value="001" Sync="TRUE"></TopoLevCd></topLvl></VectSpatRep></spatRepInfo><mdDateSt Sync="TRUE">20190531</mdDateSt></metadata>

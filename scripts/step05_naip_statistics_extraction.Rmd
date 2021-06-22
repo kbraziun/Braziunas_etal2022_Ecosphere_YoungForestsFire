@@ -1,0 +1,589 @@
+---
+title: "NAIP stats extraction"
+author: "Kristin Braziunas"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '../../')
+```
+
+## Purpose
+
+The purpose of this script is to extract consistent imagery metrics from NAIP data for use in fitting fuels regressions,
+predicting fuel loads in Berry Fire sample points (Q1 and Q2), and creating the final fuels map.
+
+Parts of this script are not evaluated when knitted due to computation time.
+
+```{r load-libs, results="hide", message=FALSE, warning=FALSE}
+# load libraries
+library(raster) # version 3.0-2
+library(sf) # version 0.7-7
+library(rgdal) # version 1.4-4
+library(glcm) # version 1.6.5
+library(dplyr) # version 0.8.3
+library(grDevices) # version 3.6.1
+library(RColorBrewer) # version 1.1-2
+
+# running in parallel
+library(parallel) # version 3.6.1
+library(foreach) # version 1.4.7
+library(doParallel) # version 1.0.15
+```
+
+## 1. Create image collection for NAIP files
+
+NAIP files were downloaded from Wyoming GIS as slightly overlapping tiles. The first step here
+was creating a catalog (similar to the LiDAR catalog) that would enable easy matching up of NAIP tiles
+with plot footprints.
+
+```{r naip-image-collection}
+# read in single image to set up blank spatial polygons data frame
+naip.samp = stack("data/NAIP/BlueMinerLake2015/m_4311028_ne_12_h_20150912.tif")
+
+# create blank sfc to hold naip extents
+naip.out = st_sfc()
+st_crs(naip.out) = crs(naip.samp)
+
+# loop through list of folders matching usgs 24k topo maps
+folds = list.files(path="data/NAIP/", pattern="2015", full.names=TRUE)
+
+for(j in 1:length(folds)) {
+  
+  fold.in = folds[j]
+  
+  # loop through files in each topo map folder
+  files = list.files(path=paste0(fold.in), pattern=".tif", full.names=TRUE)
+  
+  for(i in 1:length(files)) {
+    
+    file.in = files[i]
+    
+    # read in each naip image
+    naip.in = stack(file.in)
+    
+    # convert the extent to a polygon
+    naip.sp = st_as_sfc(st_bbox(naip.in))
+    st_crs(naip.sp) = crs(naip.in)
+    
+    # add name of image
+    naip.spdf = st_sf(file_name = file.in, geometry = naip.sp)
+    
+    # add to sfc
+    naip.out = rbind(naip.out,naip.spdf)
+
+  }
+
+}
+
+
+plot(st_geometry(naip.out))  # success!
+
+# set crs
+st_crs(naip.out) = "+init=epsg:26912"
+
+```
+
+## 2. Load data
+
+Load plot data from 2019 field data collection.
+
+```{r load-data, results="hide", warning=FALSE}
+# load and plot field plot footprints
+field.shp = st_read("processed_data/field_plot_selection/final_plots/field_plots_polygons_2019.shp")
+
+field.shp
+plot(st_geometry(naip.out))
+plot(field.shp[1], add=TRUE, border="red", lwd=5)
+
+# same crs as NAIP, but make sure the proj4strings "match"
+st_crs(field.shp) = st_crs(naip.out)
+
+# also shapefile for Q1 for BerryGlade
+bg_q1 = st_read("processed_data/field_plot_selection/final_plots/berryglade_q1_polygon.shp")
+
+st_crs(bg_q1) = st_crs(naip.out)
+
+```
+
+## 3. Identify NAIP tile corresponding to each plot
+
+I identified the NAIP tile corresponding to each 2019 field plot. If the plot was in an area of overlap between
+two tiles, I chose the first tile and verified by plotting that this NAIP tile covered the entire
+plot footprint.
+
+```{r field-plot-tiles, eval=FALSE}
+naip.list = st_intersection(naip.out,field.shp)
+
+# choose first item in this list with duplicated
+# vet this below by plotting to ensure full coverage
+naip.first = naip.list[!duplicated(naip.list$Plot_code),]
+
+# check for full coverage
+naip.check = naip.first
+
+for(k in 1:length(naip.check$Plot_code)) {
+  plot.in = naip.check[k,]$Plot_code
+  
+  # corresponding plot
+  plot.sub = naip.first %>%
+    filter(Plot_code==plot.in)
+  
+  # read in, crop and mask
+  naip.in = stack(as.character(plot.sub$file_name))
+  naip.crop = mask(crop(naip.in,plot.sub),plot.sub)
+  
+  # plot and compare
+  plotRGB(naip.crop, r=1,g=2,b=3)
+  plot(st_geometry(plot.sub),add=TRUE,border="yellow")
+
+}
+
+# looks good
+```
+
+## 4. Calculate imagery metrics for test plot
+
+I used a test plot to ensure that imagery metrics were being calculated correctly.
+
+```{r test-plot, warning=FALSE}
+### first test plots
+
+# testing north side of park, choose naip should be SW Flagg Ranch, plot 33_2
+
+flagg.sw = stack("data/NAIP/FlaggRanch2015/m_4411059_sw_12_h_20150924.tif")
+
+plotRGB(flagg.sw, r=1,g=2,b=3)
+
+con33 = field.shp %>%
+  filter(Plot_code=="Con_33_2")
+
+flagg.mask = mask(crop(flagg.sw,con33),con33)
+
+plotRGB(flagg.mask, r=1,g=2,b=3)
+plotRGB(flagg.mask, r=4,g=1,b=2)
+plot(con33,add=TRUE,border="yellow",col=NA)
+
+# metadata
+# spatial resolution: 0.5 m
+# 4 bands: 1:R, 2:G, 3:B, 4:NIR
+# ndvi is (NIR - R)/(NIR + R)
+flagg.ndvi = (flagg.mask[[4]]-flagg.mask[[1]])/(flagg.mask[[4]]+flagg.mask[[1]])
+
+plot(flagg.ndvi)
+
+# homogeneity
+flagg.hom = glcm(flagg.ndvi, n_grey=32, window=c(7,7), statistics="homogeneity", min_x=-1, max_x=1)
+flagg.hom = glcm(flagg.mask[[1]], n_grey=32, window=c(7,7), statistics="homogeneity", min_x=0, max_x=255)
+cellStats(flagg.hom, stat="mean")
+```
+
+## 5. Create function to extract imagery metrics
+
+This function calculates imagery predictor metrics from a raster with a single band. The raster must
+already be masked to the plot footprint.
+
+```{r create-naip-function, eval=FALSE}
+### functions to get statistics from a given single band
+
+get_rstats = function(r.in,bname, min.in, max.in) {
+  
+  # extracting all the same values as Erdody & Moskal 2010
+  r.max = cellStats(r.in, stat="max")
+  r.min = cellStats(r.in, stat="min")
+  r.mean = cellStats(r.in, stat="mean")
+  r.sd = cellStats(r.in,stat="sd")
+  r.cv = (r.sd/r.mean) * 100
+  
+  # mean homogeneity based on a 32 grey levels (from Franklin & Moskal 2002), using a 7x7 window (Erdody & Moskal 2010), only within plot footprint, manually set max and min based on R, G, B, NIR, NDVI theoretical max and min
+  r.hom = cellStats(glcm(r.in, n_grey=32, window=c(7,7), statistics="homogeneity", min_x=min.in, max_x=max.in),stat="mean")
+  
+  r.out = data.frame(r.max,r.min,r.mean,r.sd,r.cv,r.hom)
+  names(r.out) = c(paste0(bname,"max"),paste0(bname,"min"),paste0(bname,"mean"),
+                   paste0(bname,"sd"),paste0(bname,"cv"),paste0(bname,"hom"))
+  
+  return(r.out)
+  
+}
+```
+
+## 6. Derive NAIP metrics from 2019 field plots
+
+I applied this function to derive imagery predictors for 2019 field plot footprints. For one plot in which
+trees were sampled in 1/4 of the plot, I used the shapefile for just that quadrant.
+
+```{r field-plot-metrics, eval=FALSE}
+### apply that function to all plots and generate dataframe of predictors
+
+# blank dataframe
+spectral.out = data.frame()
+
+for(h in 1:length(naip.first$Plot_code)) {
+  plot.h = naip.first[h,]$Plot_code
+  
+  # corresponding plot
+  plot.sel = naip.first %>%
+    filter(Plot_code==plot.h)
+  
+  # read in, crop and mask
+  naip.full = stack(as.character(plot.sel$file_name))
+  naip.mask = mask(crop(naip.full,plot.sel),plot.sel)
+  
+  # calculate ndvi
+  naip.ndvi = (naip.mask[[4]]-naip.mask[[1]])/(naip.mask[[4]]+naip.mask[[1]])
+  
+  # get stats for R, G, B, NIR, and NDVI
+  rstats = get_rstats(naip.mask[[1]],"R", min.in=0, max.in=255)
+  gstats = get_rstats(naip.mask[[2]],"G", min.in=0, max.in=255)
+  bstats= get_rstats(naip.mask[[3]],"B", min.in=0, max.in=255)
+  nirstats = get_rstats(naip.mask[[4]],"NIR", min.in=0, max.in=255)
+  ndvistats = get_rstats(naip.ndvi,"NDVI", min.in=-1, max.in=1)
+
+  # combine
+  allstats = cbind(rstats,gstats,bstats,nirstats,ndvistats)
+  
+  # add to output dataframe
+  spectral.df = cbind(data.frame(Plot_code = plot.h), allstats)
+  
+  spectral.out = rbind(spectral.out,spectral.df)
+  
+  print(paste(plot.h, "complete"))
+  
+}
+
+### read in, crop and mask BerryGlade Q1
+naip.bg = stack("data/NAIP/FlaggRanch2015/m_4411059_nw_12_h_20150924.tif")
+naip.q1 = mask(crop(naip.bg,bg_q1),bg_q1)
+
+# calculate ndvi
+ndvi.q1 = (naip.q1[[4]]-naip.q1[[1]])/(naip.q1[[4]]+naip.q1[[1]])
+
+# get stats for R, G, B, NIR, and NDVI
+rstats.q1 = get_rstats(naip.q1[[1]],"R",min.in=0, max.in=255)
+gstats.q1 = get_rstats(naip.q1[[2]],"G",min.in=0, max.in=255)
+bstats.q1= get_rstats(naip.q1[[3]],"B",min.in=0, max.in=255)
+nirstats.q1 = get_rstats(naip.q1[[4]],"NIR",min.in=0, max.in=255)
+ndvistats.q1 = get_rstats(ndvi.q1,"NDVI",min.in=-1, max.in=1)
+
+# combine
+allstats.q1 = cbind(rstats.q1,gstats.q1,bstats.q1,nirstats.q1,ndvistats.q1)
+
+# add to output dataframe
+spectral.dfq1 = cbind(data.frame(Plot_code = "Con_BerryGlade_Unburned3"), allstats.q1)
+
+spectral.out = spectral.out %>%
+  # remove full footprint first
+  filter(Plot_code != "Con_BerryGlade_Unburned3") %>%
+  rbind(spectral.dfq1)
+
+# write out
+write.csv(spectral.out,"processed_data/fuels_map_variables/naip_metrics.csv", row.names=FALSE)
+```
+
+## 7. Derive NAIP metrics for Berry Fire random samples (Q1, Q2)
+
+Before applying the same function to derive imagery metrics from Berry Fire grid cell footprints, I
+added a manual check to make sure the NAIP tile
+always completely overlapped the plot footprint; this only was a concern near the edges of NAIP tiles,
+and when a plot was not completely covered, the overlapping NAIP tile was chosen instead. The same set
+of predictor metrics were derived for Berry Fire randomly sampled grid cells using plot footprints
+corresponding with the Berry Fire severity raster.
+
+```{r berry-fire-metrics, eval=FALSE}
+# read in polys
+age.polys = st_read("processed_data/Berry_Fire_sample_polys/berry_fire_age_sample.shp")
+wx.polys = st_read("processed_data/Berry_Fire_sample_polys/berry_fire_wx_sample.shp")
+  
+st_crs(age.polys) = st_crs(naip.out)
+st_crs(wx.polys) = st_crs(naip.out)
+
+# match up with naip, double check that full footprint covered
+# identify naip tif
+age.naiplist = st_intersection(age.polys, naip.out)
+wx.naiplist = st_intersection(wx.polys, naip.out)
+  
+# take first, remove duplicates
+age.first = age.naiplist[!duplicated(age.naiplist$sample_id),]
+wx.first = wx.naiplist[!duplicated(wx.naiplist$sample_id),]
+
+# use function to check area and select 2nd image if first one incomplete coverage
+check_area = function(list.in, first.in) {
+  
+  berry.naiplist = list.in
+  berry.first = first.in
+
+  area.out= data.frame()
+      
+  for(k in 1:length(berry.first$sample_id)) {
+    plot.in = berry.first[k,]$sample_id
+    
+    # corresponding plot
+    plot.sub = berry.first %>%
+      filter(sample_id==plot.in)
+    
+    # read in, crop and mask
+    naip.in = stack(as.character(plot.sub$file_name))
+    naip.crop = mask(crop(naip.in,plot.sub),plot.sub)
+    
+    naip.ncells = data.frame(x = values(naip.crop[[1]])[!is.na(values(naip.crop[[1]]))]) %>%
+      tally() 
+    
+    naip.area = naip.ncells * 0.25
+    
+    area.out = rbind(area.out, data.frame(sample_id = plot.in, file_name = as.character(plot.sub$file_name), area =naip.area$n))
+    # plot and compare
+    plotRGB(naip.crop, r=1,g=2,b=3)
+    plot(st_geometry(plot.sub),add=TRUE,border="yellow")
+    
+    # if something is missing, go to the next
+    if(naip.area > 898) {
+      
+      print("full coverage")
+      
+    } else if (naip.area <= 898) {
+      
+      berry.naip2 = berry.naiplist[berry.naiplist$sample_id==plot.in,][2,]
+      
+      # read in, crop and mask
+      naip.in2 = stack(as.character(berry.naip2$file_name))
+      naip.crop2 = mask(crop(naip.in2,berry.naip2),berry.naip2)
+      
+      plotRGB(naip.crop2, r=1,g=2,b=3)
+      plot(st_geometry(berry.naip2),add=TRUE,border="yellow")
+      
+      naip.ncells2 = data.frame(x = values(naip.crop2[[1]])[!is.na(values(naip.crop2[[1]]))]) %>%
+        tally() 
+      
+      naip.area2 = naip.ncells2 * 0.25
+      
+      # add this to berry.first
+      berry.first = rbind(berry.first,berry.naip2)
+      
+      area.out = rbind(area.out, data.frame(sample_id = plot.in, file_name = as.character(berry.naip2$file_name), area =naip.area2$n))
+      
+      print(paste("replaced feature_nbr",plot.in))
+      
+      
+    } else {
+      print("error")
+    }
+  
+  
+  }
+  
+  return(area.out)
+}
+  
+
+age.out = check_area(age.naiplist, age.first) %>%
+  left_join(age.naiplist, by=c("file_name","sample_id")) %>%
+  filter(area > 898)
+
+wx.out = check_area(wx.naiplist, wx.first) %>%
+  left_join(wx.naiplist, by=c("file_name","sample_id")) %>%
+  filter(area > 898)
+  
+
+# extract predictors from each
+# starting with above script, created new function to do this
+berry_extract = function(berry.in) {
+
+  berry.list = berry.in
+  
+  
+  # blank dataframe
+  spectral.out = data.frame()
+  
+  for(h in 1:length(berry.list$sample_id)) {
+    plot.h = berry.list[h,]$sample_id
+    
+    # corresponding plot
+    plot.sel = berry.list %>%
+      filter(sample_id==plot.h) %>%
+      st_as_sf()
+    
+    # read in, crop and mask
+    naip.full = stack(as.character(plot.sel$file_name))
+    naip.mask = mask(crop(naip.full,plot.sel),plot.sel)
+    
+    # calculate ndvi
+    naip.ndvi = (naip.mask[[4]]-naip.mask[[1]])/(naip.mask[[4]]+naip.mask[[1]])
+    
+    # get stats for R, G, B, NIR, and NDVI
+    rstats = get_rstats(naip.mask[[1]],"R", min.in=0, max.in=255)
+    gstats = get_rstats(naip.mask[[2]],"G", min.in=0, max.in=255)
+    bstats= get_rstats(naip.mask[[3]],"B", min.in=0, max.in=255)
+    nirstats = get_rstats(naip.mask[[4]],"NIR", min.in=0, max.in=255)
+    ndvistats = get_rstats(naip.ndvi,"NDVI", min.in=-1, max.in=1)
+    
+    # combine
+    allstats = cbind(rstats,gstats,bstats,nirstats,ndvistats)
+    
+    # add to output dataframe
+    spectral.df = cbind(data.frame(sample_id = plot.h), allstats)
+    
+    spectral.out = rbind(spectral.out,spectral.df)
+    
+    print(paste(plot.h, "complete"))
+    
+  }
+
+  return(spectral.out)
+  
+} 
+
+spect.age = berry_extract(age.out) %>%
+  right_join(age.out, by="sample_id") %>%
+  dplyr::select(-geometry) %>%
+  as.data.frame()
+
+spect.wx = berry_extract(wx.out) %>%
+  right_join(wx.out, by="sample_id") %>%
+  dplyr::select(-geometry) %>%
+  as.data.frame()
+
+
+write.csv(spect.age, file="processed_data/Berry_Fire_sample_polys/berry_fire_age_naip.csv", row.names=FALSE)
+write.csv(spect.wx, file="processed_data/Berry_Fire_sample_polys/berry_fire_wx_naip.csv", row.names=FALSE)
+```
+
+## 8. Imagery statistics for fuels map
+
+For the fuels map, the LANDFIRE common grid is used to extract the same predictor variables
+described above at 30m resolution. This takes a long time, so first NAIP tiles are either
+excluded if outside the LiDAR data acquisition footprint (i.e., outside of GRTE, JODR, national
+elk refuge) and cropped as close to the boundary as possible. The process is then run in
+parallel. Rasters are first created in native CRS and then reprojected to NAD2011.
+These tiles are later mosaiced into a 30m raster covering the entire fuels map footprint (see step 07 script).
+
+```{r fuels-map-metrics, eval=FALSE}
+# use same NAD2011 common grid as lidar
+
+grte.nad2011 = raster("processed_data/GRTE_rasters/grte_30m_final_mask_nad2011.tif")
+crs(grte.nad2011) = ("+init=epsg:6341") # set crs
+
+# project to NAD83 to match NAIP
+grte.nad83r = projectRaster(grte.nad2011, crs=crs(naip.out))
+
+grte.nad83r
+
+# function for final processing of each metric
+naip_agg = function(r.in, fun.in, name.out) {
+  # aggregate given raster and function
+  naip.agg = raster::aggregate(r.in, fact=60, fun=fun.in, expand=FALSE)
+  
+  # resample and project to grte.crop grid
+  r.resamp = raster::resample(naip.agg, grte.trim, method="ngb")
+  r.nad2011 = raster::projectRaster(r.resamp, crs=raster::crs(grte.nad2011))
+  
+  # write final raster
+  raster::writeRaster(r.nad2011, paste0("processed_data/GRTE_rasters/naip_tiles/",name.out,"_",corner.x,"_",corner.y,".tif"), format="GTiff")
+}
+
+# run in parallel
+
+detectCores() # 8
+cl = makeCluster(3) # use 3
+registerDoParallel(cl)
+
+# start of parallel operation
+par.start = Sys.time()
+print(par.start)
+
+foreach(i=1:96) %dopar% {
+  
+# if not running in parallel can use
+# for(i in c(41:44)) {
+  
+  start.time=Sys.time()
+  print(start.time)
+  
+  # assign filename
+  filename.in = as.character(naip.out[i,]$file_name)
+  
+  naip.in = raster::stack(filename.in)
+  # plotRGB(naip.in)
+  raster::crs(naip.in) = "+init=epsg:26912"
+  
+  # get information on corner
+  corner.x = as.integer(raster::xmin(naip.in))
+  corner.y = as.integer(raster::ymin(naip.in))
+  
+  # check if extents overlap, skip if not
+  if(is.null(raster::intersect(raster::extent(naip.in), raster::extent(grte.nad83r)))) {
+    print("extents do not overlap")
+    next
+  }
+  
+  # crop grte mask to naip tile and to shapefile
+  grte.crop = raster::crop(grte.nad83r, naip.in[[1]])
+  
+  # skip to next if no data to grte.crop
+  if(length(grte.crop[!is.na(raster::values(grte.crop))]) == 0) {
+    print("outside park boundary, skipping tile")
+    next
+  }
+  
+  # calculate ndvi at 0.5 m resolution
+  ndvi.layer = (naip.in[[4]]-naip.in[[1]])/(naip.in[[4]]+naip.in[[1]])
+  names(ndvi.layer) = "ndvi"
+  
+  # add to stack
+  naip.all = raster::stack(naip.in, ndvi.layer)
+  
+  # clean up
+  rm(naip.in, ndvi.layer)
+  
+  print("ndvi calculated")
+  
+  # trim raster to remove na area from subsequent calculations
+  grte.trim = raster::trim(grte.crop)
+  
+  # line up as close as possible, leave snap as "near"
+  naip.crop = raster::crop(naip.all, grte.trim)
+  
+  # clean up
+  rm(naip.all, grte.crop)
+  
+  print(paste0("calculating homogeneity for",raster::ncell(naip.crop),"cells"))
+  
+  # calculate homogeneity in 7x7 moving window
+  hom1 = glcm::glcm(naip.crop[[1]], n_grey=32, window=c(7,7), statistics="homogeneity", min_x=0, max_x=255)
+  print("hom1 done")
+  hom2 = glcm::glcm(naip.crop[[2]], n_grey=32, window=c(7,7), statistics="homogeneity", min_x=0, max_x=255)
+  print("hom2 done")
+  hom3 = glcm::glcm(naip.crop[[3]], n_grey=32, window=c(7,7), statistics="homogeneity", min_x=0, max_x=255)
+  print("hom3 done")
+  hom4 = glcm::glcm(naip.crop[[4]], n_grey=32, window=c(7,7), statistics="homogeneity", min_x=0, max_x=255)
+  print("hom4 done")
+  hom5 = glcm::glcm(naip.crop[[5]], n_grey=32, window=c(7,7), statistics="homogeneity", min_x=-1, max_x=1)
+
+  hom.stack = raster::stack(hom1,hom2,hom3,hom4,hom5)
+  names(hom.stack) = c("band_1","band_2","band_3","band_4","ndvi")
+  # clean up
+  rm(hom1, hom2, hom3, hom4, hom5)
+
+  print("homogeneity calculated")
+  
+  # looks good, now aggregate to 30m for all variables of interest
+
+  naip_agg(naip.crop,"max","band_max")
+  naip_agg(naip.crop,"min","band_min")
+  naip_agg(naip.crop,"mean","band_mean")
+  naip_agg(naip.crop,"sd","band_sd")
+  naip_agg(hom.stack,"mean","band_hom")
+  
+  # will calculate CV later using raster math
+  
+  print(paste("done with file number",i,"name", filename.in))
+  
+  
+  end.time = Sys.time()
+  
+  print(end.time-start.time)
+
+}
+
+stopCluster(cl)
+```

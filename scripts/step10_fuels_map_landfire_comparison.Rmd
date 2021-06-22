@@ -1,0 +1,167 @@
+---
+title: "Fuels map and LANDFIRE comparison"
+author: "Kristin Braziunas"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '../../')
+```
+
+## Purpose
+
+The purpose of this script is to compare canopy fuels mapped in LANDFIRE and in lidar-imagery fusion fuels
+maps with field data.
+
+```{r load-libs, results="hide", message=FALSE, warning=FALSE}
+# load libraries
+library(dplyr) # version 0.8.3
+library(sf) # version 0.7-7
+library(raster) # version 3.0-2
+library(ggplot2) # version 3.2.1
+library(openxlsx) # version 4.1.3
+library(tidyr) # version 1.0.2
+```
+
+## 1. Load data
+
+This chunk loads field data, LANDFIRE fuels maps, and lidar-imagery fusion fuels maps. LANDFIRE fuels maps need
+to be downloaded for this script to be run.
+
+```{r load-rdnbr, results="hide"}
+### final fuels map
+# fuels map shapefile
+fuels.shp = st_read("processed_data/GRTE_shps/fuels_map_outline.shp")
+
+# fuels map layers, unmasked versions
+lidar.stack = stack("processed_data/GRTE_rasters/fuels_map_comparison/grte_30m_forest_CC-pct_nad2011_unmasked.tif",
+                    "processed_data/GRTE_rasters/fuels_map_comparison/grte_30m_forest_CH-m_nad2011_unmasked.tif",
+                    "processed_data/GRTE_rasters/fuels_map_comparison/grte_30m_conifer_CBD-kg-m3_nad2011_unmasked.tif",
+                    "processed_data/GRTE_rasters/fuels_map_comparison/grte_30m_conifer_CBH-m_nad2011_unmasked.tif")
+
+names(lidar.stack) = c("CC_pct","SH_m","CBD_kg_m3","CBH_m")
+
+### landfire
+lfin.stack = stack("data/LANDFIRE/US_200CC/us_200cc/hdr.adf",
+                   "data/LANDFIRE/US_200CH/us_200ch/hdr.adf",
+                   "data/LANDFIRE/US_200CBD/us_200cbd/hdr.adf",
+                   "data/LANDFIRE/US_200CBH/us_200cbh/hdr.adf") 
+
+names(lfin.stack) = c("LF_CC","LF_CH","LF_CBD","LF_CBH")
+
+### field plots
+# read in shapefiles for conifer and deciduous plots only
+plots.in = read.xlsx("data/Field_plots_2019/Raw_data/GRTE_LiDAR_field_data_2019.xlsx",
+                     sheet = "General_plot_measurements",
+                     colNames=TRUE) %>%
+  filter(Vegetation_type %in% c("Conifer","Deciduous"))
+
+# create points using plot centroids
+plot.pts = st_as_sf(plots.in, coords=c("Postprocessed_easting","Postprocessed_northing"), crs=26912) %>%
+  # transform to landfire crs
+  st_transform(crs=crs(lfin.stack))
+
+# read in fuels metrics calculated for each plot
+# subset field plots to only canopy fuels mapped in landfire
+fuels.in = read.csv("processed_data/fuels_map_variables/field_plot_2019_fuels.csv") %>%
+  # conifer and deciduous plots only
+  filter(Vegetation_type %in% c("Conifer","Deciduous")) %>%
+  # 4 canopy fuels mapped
+  dplyr::select(c(Plot_code,Vegetation_type,CC_pct,SH_m,CBD_kg_m3,CBH_m)) %>%
+  pivot_longer(c(CC_pct:CBH_m), values_to="observed") %>%
+  # deciduous forest does not include CBD and CBH
+  filter(!(Vegetation_type=="Deciduous" & name %in% c("CBD_kg_m3","CBH_m")))
+```
+
+## 2. Compare maps with field data
+
+This chunk extracts corresponding raster values from fuels maps using field data plot centroids, summarizes linear
+model fits, and plots predicted versus observed comparisons.
+
+```{r compare-maps, warning=FALSE}
+# extract values from landfire using field plot centroids
+lf.field = cbind(plots.in,data.frame(raster::extract(lfin.stack, plot.pts))) %>%
+  # apply transformations as needed during this step
+  mutate(CC_pct = LF_CC,
+         SH_m = LF_CH/10,
+         CBD_kg_m3 = LF_CBD/100,
+         CBH_m = LF_CBH/10) %>%
+  dplyr::select(c(Plot_code,Vegetation_type,CC_pct:CBH_m)) %>%
+  pivot_longer(c(CC_pct:CBH_m), values_to="predicted") %>%
+  # deciduous forest does not include CBD and CBH
+  filter(!(Vegetation_type=="Deciduous" & name %in% c("CBD_kg_m3","CBH_m")))
+
+# create comparison table, landfire predicted v. observed
+lf.comp = left_join(fuels.in, lf.field, by=c("Plot_code","Vegetation_type","name")) %>%
+  mutate(group="landfire")
+
+# transform plot points to lidar-imagery fusion crs
+plot.lidar = plot.pts %>%
+  st_transform(crs=crs(lidar.stack))
+
+# extract values from lidar-imagery fusion map using field plot centroids
+lidar.field = cbind(plots.in,data.frame(raster::extract(lidar.stack, plot.lidar)))%>%
+  dplyr::select(c(Plot_code,Vegetation_type,CC_pct:CBH_m)) %>%
+  pivot_longer(c(CC_pct:CBH_m), values_to="predicted") %>%
+  # deciduous forest does not include CBD and CBH
+  filter(!(Vegetation_type=="Deciduous" & name %in% c("CBD_kg_m3","CBH_m")))
+
+# create comparison table, lidar predicted v. observed
+lidar.comp = left_join(fuels.in, lidar.field, by=c("Plot_code","Vegetation_type","name")) %>%
+  mutate(group="lidar")
+
+# full comparison table
+full.comp = rbind(lidar.comp,lf.comp)
+
+# # write this out
+# write.csv(full.comp, "analysis/fuels_prediction_map/fuels_map_landfire_comparison.csv", row.names=FALSE)
+
+### linear model fits
+summary(lm(predicted~observed, data=lidar.comp[lidar.comp$name=="CC_pct",]))
+summary(lm(predicted~observed, data=lidar.comp[lidar.comp$name=="SH_m",]))
+summary(lm(predicted~observed, data=lidar.comp[lidar.comp$name=="CBD_kg_m3",]))
+summary(lm(predicted~observed, data=lidar.comp[lidar.comp$name=="CBH_m",]))
+
+summary(lm(predicted~observed, data=lf.comp[lf.comp$name=="CC_pct",]))
+summary(lm(predicted~observed, data=lf.comp[lf.comp$name=="SH_m",]))
+summary(lm(predicted~observed, data=lf.comp[lf.comp$name=="CBD_kg_m3",]))
+summary(lm(predicted~observed, data=lf.comp[lf.comp$name=="CBH_m",]))
+
+### comparison figure
+# set square limits
+facetlims = full.comp %>%
+  group_by(Plot_code,Vegetation_type,name) %>% 
+  summarise(min = min(predicted,observed), max = max(predicted,observed)) %>%
+  pivot_longer(c(min:max),names_to="var",values_to="predicted") %>%
+  mutate(observed=predicted,
+         name=factor(name, levels=c("CC_pct","SH_m","CBD_kg_m3","CBH_m")))
+
+# plot comparisons
+full.comp %>%
+  mutate(name = factor(name, levels=c("CC_pct","SH_m","CBD_kg_m3","CBH_m"))) %>%
+  ggplot(aes(x=observed, y=predicted)) +
+  geom_point(aes(color=group,fill=group,shape=group),size=2) +
+  geom_abline(lty=2, size=0.5) +
+  geom_smooth(aes(color=group),method="lm", se=FALSE, size=1) +
+  facet_wrap(~name,scales="free",
+             labeller = as_labeller(c("CBD_kg_m3" = "CBD~(kg~m^-3)",
+                                       "CBH_m" = "CBH~(m)",
+                                       "CC_pct" = "CC~(\'%\')",
+                                       "SH_m" = "CH~(m)"), label_parsed)) +
+  geom_blank(data=facetlims) +
+  xlab("Observed") +
+  ylab("Predicted") +
+  scale_color_manual(labels=c("LANDFIRE","Lidar-imagery\nfusion"),
+                     values=c("gray30","#ca0020")) +
+  scale_fill_manual(labels=c("LANDFIRE","Lidar-imagery\nfusion"),
+                    values=alpha(c("gray30","#ca0020"),0.4)) +
+  scale_shape_manual(labels=c("LANDFIRE","Lidar-imagery\nfusion"),
+                     values=c(24,21)) +
+  theme_bw() +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.spacing = unit(1,"lines"),
+    strip.background = element_blank(),
+    legend.title = element_blank()) 
+```

@@ -1,0 +1,598 @@
+---
+title: "Berry Fire point selection"
+author: "Kristin Braziunas"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '../../')
+```
+
+## Purpose
+
+The purpose of this script is to randomly select points for analysis in Q1 (young v. old forest) and
+Q2 (moderate v. high spread days). At the end of this script, I also calculate summary information about the Berry Fire
+(high, low spread days; fire weather).
+
+```{r load-libs, results="hide", message=FALSE, warning=FALSE}
+# load libraries
+library(sp) # version 1.3-1
+library(rgdal) # version 1.4-4
+library(raster) # version 3.0-2
+library(dplyr) # version 0.8.3
+library(sf) # version 0.7-7
+library(fasterize) # version 1.0.0
+library(rgeos) # version 0.5-1
+```
+
+## 1. Load data
+
+This chunk loads the Berry Fire RdNBR raster, Berry Fire perimeter, and 30m DEM for Grand Teton National Park (GRTE).
+
+```{r load-rdnbr, results="hide"}
+# mtbs final fire perimeter
+perim.in = readOGR("data/MTBS/Berry_Fire/wy4402111078620160725_20160719_20170722_burn_bndy.shp",
+                  layer="wy4402111078620160725_20160719_20170722_burn_bndy")
+
+
+# fire severity raster
+sev.in = raster("data/MTBS/Berry_Fire/wy4402111078620160725_20160719_20170722_rdnbr.tif")
+
+# dem derived from lidar
+dem.in = raster("processed_data/GRTE_rasters/grte_30m_dem.tif")
+
+plot(sev.in)
+plot(perim.in, add=TRUE)
+
+```
+
+## 2. Mask Berry Fire severity raster
+
+I masked Berry Fire burn severity to only includes pixels within the
+fire perimeter that were likely burned (RdNBR > 0) and excluding anomalously high values (RdNBR < 2000). Then,
+I further masked this raster to exclude areas where fuels were not mapped: forests outside
+of GRTE and John D. Rockefeller Jr. Memorial Parkway (JODR), vegetation that was not either mature or regenerating
+post-fire conifer forest.
+
+```{r mask-berry, results="hide"}
+
+# mask with berry fire perimeter
+identicalCRS(sev.in,perim.in)  # true
+
+sev.p = mask(sev.in, perim.in)
+
+# take out negative and anomalous high values 
+sev.p[values(sev.p)<0] = NA  # using 0 to exclude anything
+# with increased greenness or likely unburned
+sev.p[values(sev.p)>2000] = NA  # 2000 is cut-off from harvey et al. 2016 Ecology
+
+# hist(values(sev.p))
+
+plot(sev.p)
+
+# use nps perimeters to exclude areas outside of GRTE and JODR
+# because fuels only mapped in GRTE and JODR
+
+bound = readOGR("data/NPSAdminBoundaries/NPSAdminBoundaries.shp")
+identicalCRS(sev.p, bound)
+
+grte = bound[bound@data$UNIT_CODE %in% c("GRTE","JODR"),]
+# plot(grte)
+
+grte.aea = spTransform(grte, CRSobj = crs(sev.p))
+
+# plot(sev.p)
+# plot(grte.aea, add=TRUE)
+
+sev.grte = mask(sev.p, grte.aea)
+
+plot(sev.grte)
+plot(grte.aea, add=TRUE)
+
+# then use veg map to mask to only conifer forest, including what might have been labeled recently burned in 2005
+
+veg = readOGR("data/GRTE_Veg/GRTE_Veg.shp")
+
+con = veg[veg@data$ECOLOGY %in% c("Coniferous Woodland") | veg@data$VEG_NAME == "Recently Burned Sparse Vegetation",]
+
+con.aea = spTransform(con, CRSobj=crs(sev.grte))
+
+sev.con = mask(sev.grte, con.aea)
+
+plot(sev.con)
+
+```
+
+## 3. Differentiate moderate versus extreme fire weather days
+
+I used daily fire progression maps to differentiate areas that burned under moderate versus extreme fire weather.
+Extreme fire weather days included 3 periods (covering 4 days) of extensive, rapid fire spread.
+
+```{r create-fire-weather-rasters, results="hide"}
+### read in fire perimeters for high spread days
+# 822 and 823-824
+pre822 = readOGR("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160822_0221_dd83.shp")
+post822 = readOGR("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160822_2009_dd83.shp")
+post824 = readOGR("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160824_2112_dd83.shp")
+
+# 911
+pre911 = readOGR("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160910_2256_dd83.shp")
+post911 = readOGR("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160912_0058_dd83.shp")
+
+plot(post911)
+plot(pre911,add=TRUE,col="yellow")
+plot(post824, add=TRUE,col="orange")
+plot(post822,add=TRUE,col="red")
+plot(pre822,add=TRUE, col="black")
+
+identicalCRS(post911,sev.con)
+
+# transform to same crs as RdNBR rasters
+post911.aea = spTransform(post911,CRSobj = crs(sev.con))
+pre911.aea = spTransform(pre911,CRSobj = crs(sev.con))
+post824.aea = spTransform(post824,CRSobj = crs(sev.con))
+post822.aea = spTransform(post822,CRSobj = crs(sev.con))
+pre822.aea = spTransform(pre822,CRSobj = crs(sev.con))
+
+# start with 911
+pm911 = mask(sev.con, post911.aea)
+growth911 = mask(pm911, pre911.aea, inverse=TRUE)
+
+# plot(growth911)
+
+# then 823-824
+pm824 = mask(sev.con,post824.aea)
+growth824 = mask(pm824, post822.aea, inverse=TRUE)
+
+# plot(growth824)
+
+# then 822
+pm822 = mask(sev.con, post822.aea)
+growth822 = mask(pm822, pre822.aea, inverse=TRUE)
+
+# plot(growth822)
+
+# combined growth on these high spread dates
+growthHi = merge(growth911,growth824, growth822)
+plot(growthHi)
+
+# growth on other than these 3 days
+# plot(sev.con)
+growthMod = mask(sev.con, growthHi, inverse=TRUE)
+plot(growthMod)
+
+```
+
+## 4. Differentiate young versus mature forest
+
+Within areas burned in 2016, for Q1 I identified reburns of young, ~30-year-old forest that had previously burned in
+1987 or 1988. Young forest included only areas that had burned at moderate or high severity in the first fire and
+then reburned at any severity in 2016 (this excluded areas within first fire perimeters that were unburned, increased greenness,
+or low severity). I identified mature forest as areas that burned in the Berry Fire and were outside of
+fire perimeters from 1987, 1988, and 2000.
+
+For Q1 comparison of young and mature forest fuels and burn severity, I minimized variation due solely
+to differences in fire weather by restricting comparison to areas that burned during extreme weather days as
+delineated in the previous chunk.
+
+For Q2, I also identified areas that burned in 2000 at moderate or high severity to determine how many pixels in our
+random sample were young forest.
+
+```{r young-mature-forest, results="hide"}
+
+### read in young fire perimeters
+# glade fire perimeter
+glade = readOGR("data/MTBS/Glade/wy4409911072120000815/wy4409911072120000815_20000723_20010726_burn_bndy.shp")
+
+# huck fire perimeter - this includes 1987 dave adams hill fire perimeter
+lake = readOGR("data/MTBS/Lake_Creek/wy4415711051919880711/wy4415711051919880711_19860818_19890802_burn_bndy.shp")
+
+# wilcox fire perimeter
+wilcox = readOGR("data/MTBS/Wilcox/wy4397811071720000815_20000723_20010726_burn_bndy.shp")
+
+# plot(glade)
+# plot(lake)
+# plot(wilcox)
+
+# change crs
+glade.aea = spTransform(glade, CRSobj=crs(sev.con))
+lake.aea = spTransform(lake, CRSobj=crs(sev.con))
+wilcox.aea = spTransform(wilcox, CRSobj = crs(sev.con))
+
+plot(sev.con)
+plot(glade.aea, add=TRUE)
+plot(lake.aea, add=TRUE)
+plot(wilcox.aea,add=TRUE)
+
+# sev old is everything outside of glade, huck (+adams hill), wilcox perimeters
+sev.old = mask(mask(mask(sev.con, glade.aea, inverse=TRUE), lake.aea,inverse=TRUE),wilcox.aea,inverse=TRUE)
+
+# only high fire spread days, to keep fire weather similar
+sevHi.old = mask(sev.old, growthHi)
+plot(sevHi.old)
+
+### sev young is everything inside of huck + adams hill perimeter that burned as moderate - high severity in
+# first fire
+# glade and wilcox omitted from young forest due to small reburn area (glade) and different forest types (wilcox)
+
+# read in and mask fire severity based on huck x adams hill fire severity
+huck.mtbs = raster("data/MTBS/Lake_Creek/wy4415711051919880711/wy4415711051919880711_19860818_19890802_dnbr6.tif")
+huck.mask = reclassify(huck.mtbs, matrix(c(-Inf,2.9,NA,2.9,4.9,1,4.9,Inf,NA)))
+huck.cmask = crop(huck.mask,sev.con)
+
+# sev young is everything inside of lake perimeter that burned at mod to high severity
+sev.young = mask(sev.con, huck.cmask)
+
+# only high fire spread days, to keep fire weather similar
+sevHi.young = mask(sev.young, growthHi)
+plot(sevHi.young)
+
+# also read in glade and wilcox perimeters, use these to determine how many of the
+# moderate v. severe fire weather randomly sampled polygons represented young forest for q3
+glade.mtbs = raster("data/MTBS/Glade/wy4409911072120000815/wy4409911072120000815_20000723_20010726_dnbr6.tif")
+glade.mask = reclassify(glade.mtbs, matrix(c(-Inf,2.9,NA,2.9,4.9,1,4.9,Inf,NA)))
+
+wilcox.mtbs = raster("data/MTBS/Wilcox/wy4397811071720000815_20000723_20010726_dnbr6.tif")
+wilcox.mask = reclassify(wilcox.mtbs, matrix(c(-Inf,2.9,NA,2.9,4.9,1,4.9,Inf,NA)))
+```
+
+## 5. Take random sample for Q1 and Q2
+
+I first created a function to randomly sample grid cells separated by a minimum distance. Then, for Q1,
+I compared fuels and burn severity in young versus mature forest that burned under similar fire weather using
+a random sample of 30 cells in each category separated by a minimum of 500 m. For this question, young forest
+only included ~30-year-old forest that first burned in 1987 or 1988. For Q2, I examined how
+well fuels predicted burn severity under moderate versus extreme fire weather using a random sample of 50 cells
+in each category separated by a minimum of 500 m. This sample was taken from throughout the entire perimeter, so
+it included mature forest as well as reburns of forest recovering from previous fire in 1987, 1988, and 2000.
+
+This chunk takes a while to run and stores large files in memory so is not evaluated when knitted.
+Outputs are saved from previous run and reloaded in following chunk.
+
+```{r random-sample, eval=FALSE}
+
+### full sampling pipeline as function
+
+rand_samp = function(r.sub, dist.in, npts) {
+  
+  # switch to polygons
+  sub.poly = rasterToPolygons(r.sub)
+  sub.utm = spTransform(sub.poly, CRSobj=crs(dem.in))
+  
+  # create distance matrix 
+  dmat = spDists(sub.utm)
+  
+  # set min distance between points
+  min.dist = dist.in
+  dmat[dmat <= min.dist] = NA
+  
+  # create loop to pull one sample at a time
+  # exclude anything within min dist
+  # and continue to max sample
+  
+  # full sample pool starts with all points
+  pool = as.numeric(rownames(sub.utm@data))
+  
+  # output data frame
+  randpts = data.frame()
+  
+  for(i in 1:npts) {
+    
+    # break if only 1 point left
+    # if set this to length = 0 only, problems with output
+    if(length(pool) <= 1) {
+      break
+    }
+    
+    # take 1 random point
+    rand1 = sample(pool, 1, replace=FALSE)
+    
+    # update pool to exclude everything within min dist
+    dmat.dist = dmat[rand1,]
+    dmat.pts = which(is.na(dmat.dist))
+    pool = pool[!pool %in% dmat.pts]
+    
+    # add to df
+    randpts = rbind(randpts, data.frame(ID=rand1))
+  }
+  
+  # get polys using ids
+  sub.out = sub.utm[c(randpts$ID),]
+  
+  return(sub.out)
+  
+}
+
+
+# sample these rasters
+# use seeds to ensure consistency with code reruns
+# sample(1:1000,1)
+
+### q2 samples
+set.seed(552)
+sampleYoung = rand_samp(sevHi.young, dist.in = 500, npts=30) %>%
+  st_as_sf()
+
+set.seed(520)
+sampleOld = rand_samp(sevHi.old, dist.in = 500, npts = 30) %>%
+  st_as_sf()
+
+### q3 samples
+set.seed(866)
+sampleMod = rand_samp(growthMod, dist.in = 500, npts=50) %>%
+  st_as_sf()
+
+set.seed(887)
+sampleHi = rand_samp(growthHi, dist.in = 500, npts=50) %>%
+  st_as_sf()
+
+# not evaluated when knit
+plot(sampleYoung)
+plot(sampleOld)
+plot(sampleMod)
+plot(sampleHi)
+
+summary(sampleYoung)
+summary(sampleOld)
+summary(sampleMod)
+summary(sampleHi)
+```
+
+## 6. Match up random samples with fire history, burn date
+
+For Q2, I used fire progression maps to match up burn date and fire history (i.e., whether that pixel had previously
+burned at either moderate or high severity in 1987, 1988, or 2000) with each cell in our random samples.
+
+```{r fire-hx-burn-date, results="hide"}
+
+### load random samples, filter to align with previous chunk
+sampleYoung = st_read("processed_data/Berry_Fire_sample_polys/berry_fire_age_sample.shp") %>%
+  filter(age=="young") %>%
+  dplyr::select(rdnbr, geometry) %>%
+  rename(wy4402111078620160725_20160719_20170722_rdnbr = rdnbr)
+sampleOld = st_read("processed_data/Berry_Fire_sample_polys/berry_fire_age_sample.shp") %>%
+  filter(age=="old") %>%
+  dplyr::select(rdnbr, geometry) %>%
+  rename(wy4402111078620160725_20160719_20170722_rdnbr = rdnbr)
+sampleMod = st_read("processed_data/Berry_Fire_sample_polys/berry_fire_wx_sample.shp") %>%
+  filter(weather=="moderate") %>%
+  dplyr::select(rdnbr, geometry) %>%
+  rename(wy4402111078620160725_20160719_20170722_rdnbr = rdnbr)
+sampleHi = st_read("processed_data/Berry_Fire_sample_polys/berry_fire_wx_sample.shp") %>%
+  filter(weather=="extreme") %>%
+  dplyr::select(rdnbr, geometry) %>%
+  rename(layer = rdnbr)
+
+### create master spread date raster
+
+# start with final fire perimeter
+perim.rast = perim.in %>%
+  st_as_sf() %>%
+  # transform to crs of severity raster
+  st_transform(crs=crs(sev.con)) %>%
+  # rasterize to severity raster, use value to indicate burn date
+  fasterize(sev.con) * 917
+  
+plot(perim.rast)
+
+r.master = perim.rast
+
+# function to add a new raster on top based on fire progression and add to r.master
+fire_prog = function(sf.in, date.in) {
+  newPerim = st_read(sf.in) %>%
+    st_transform(crs=crs(sev.con)) %>%
+    fasterize(sev.con) * date.in
+  
+  r.master = merge(newPerim,r.master)
+  
+  return(r.master)
+  
+}
+
+# iteratively add growth perimeter for each date
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160917_0108_dd83.shp", 916)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160915_1743_dd83.shp", 915)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160912_0058_dd83.shp", 911)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160910_2256_dd83.shp", 910)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160909_2210_dd83.shp", 909)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160905_1301_dd83.shp", 905)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160902_2059_dd83.shp", 902)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160902_0152_dd83.shp", 901)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160901_0000_dd83.shp", 831)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160830_2339_dd83.shp", 830)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160829_2201_dd83.shp", 829)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160829_0100_dd83.shp", 828)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160827_2043_dd83.shp", 827)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160827_0117_dd83.shp", 826)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160824_2112_dd83.shp", 824)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160822_2009_dd83.shp", 822)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160822_0221_dd83.shp", 821)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160818_0205_dd83.shp", 817)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160816_0217_dd83.shp", 815)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160810_0000_dd83.shp", 809)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160807_0000_dd83.shp", 806)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160805_1500_dd83.shp", 805)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160731_0000_dd83.shp", 730)
+r.master = fire_prog("data/GeoMAC/2016_fire_data/Wyoming/Berry/wy_berry_20160727_2100_dd83.shp", 727)
+
+plot(r.master)
+plot(perim.in, add=TRUE)
+
+# match up date with high spread days
+sampleHi.date = sampleHi %>%
+  st_transform(st_crs(r.master)) %>%
+  mutate(date = as.integer(extract(r.master,.))) %>%
+  mutate(date = factor(date),
+         weather = "extreme") %>%
+  rename(rdnbr=layer) %>%
+  st_transform(st_crs(dem.in))
+
+summary(sampleHi.date)
+
+# match up date with low spread days
+sampleMod.date = sampleMod %>%
+  st_transform(st_crs(r.master)) %>%
+  mutate(date = as.integer(extract(r.master,.))) %>%
+  mutate(date = factor(date),
+         weather = "moderate") %>%
+  rename(rdnbr=wy4402111078620160725_20160719_20170722_rdnbr) %>%
+  st_transform(st_crs(dem.in))
+
+summary(sampleMod.date)
+
+
+```
+
+## 6. Add topographic information and export
+
+I also matched up topographic information and exported final randomly selected cells.
+
+```{r add-topo-export}
+
+# combine old, young dataset
+sampleOld.class = sampleOld %>%
+  mutate(age = "old") %>%
+  rename(rdnbr = wy4402111078620160725_20160719_20170722_rdnbr)
+
+sample.age = sampleYoung %>%
+  mutate(age = "young") %>%
+  rename(rdnbr = wy4402111078620160725_20160719_20170722_rdnbr) %>%
+  rbind(sampleOld.class)
+
+# combine mod, hi fire wx datasets
+sample.wx = sampleMod.date %>%
+  rbind(sampleHi.date)
+
+plot(st_geometry(sample.wx))
+plot(st_geometry(sample.age))
+
+
+### add topographic information
+dem.slope = terrain(dem.in, opt="slope", unit="degrees")
+dem.aspect = terrain(dem.in, opt="aspect", unit="degrees")
+
+sample.ageout = sample.age %>%
+  mutate(elev_m = extract(dem.in,.,fun=mean,weights=TRUE),
+         slope_deg = extract(dem.slope, .,fun=mean,weights=TRUE),
+         aspect_deg = extract(dem.aspect, .,fun=mean,weights=TRUE))  %>%
+  mutate(sample_id = row_number())
+
+# also add previous fire information to wx sample
+sample.wxout = sample.wx %>%
+  st_transform(crs = crs(huck.mask)) %>%
+  # previously burned as mod to severe fire
+  mutate(adams_huck = extract(huck.mask,.,fun=mean),
+         glade = extract(glade.mask,.,fun=mean),
+         wilcox = extract(wilcox.mask,.,fun=mean),
+         prev_fire = ifelse(adams_huck == 1 & !is.na(adams_huck), "adams_huck",
+                            ifelse(glade == 1 & !is.na(glade), "glade",
+                                   ifelse(wilcox ==1 & !is.na(wilcox), "wilcox","none")))) %>%
+  mutate(prev_fire = as.factor(prev_fire)) %>%
+  dplyr::select(-c(adams_huck:wilcox)) %>%
+  # transform back
+  st_transform(crs = crs(dem.in)) %>%
+  # add topographic information
+  mutate(elev_m = extract(dem.in,.,fun=mean,weights=TRUE),
+         slope_deg = extract(dem.slope, .,fun=mean,weights=TRUE),
+         aspect_deg = extract(dem.aspect, .,fun=mean,weights=TRUE))  %>%
+  mutate(sample_id = row_number())
+
+# data summaries
+sample.ageout %>%
+  filter(age=="young") %>%
+  summary()
+sample.ageout %>%
+  filter(age=="old") %>%
+  summary()
+sample.wxout %>%
+  filter(weather=="moderate") %>%
+  summary()
+sample.wxout %>%
+  filter(weather=="extreme") %>%
+  summary()
+
+# ### write out shapefiles
+# st_write(sample.ageout,dsn="processed_data/Berry_Fire_sample_polys/berry_fire_age_sample.shp")
+# st_write(sample.wxout,dsn="processed_data/Berry_Fire_sample_polys/berry_fire_wx_sample.shp")
+
+```
+
+## 8. Calculate summary Berry Fire stats
+
+I calculated summary statistics for the Berry Fire, including total area burned, area reburned,
+area burned on moderate versus extreme fire weather days, and weather conditions on moderate
+versus extreme fire weather days.
+
+```{r berry-stats}
+
+### area calculations
+# total area
+head(perim.in) # 20122 acres
+# fire burned into October
+20122/2.471 # 8143 ha
+
+# use fire spread perimeters to derive area burned on high spread days
+area_burned_911 = gIntersection(perim.in, post911.aea) %>%
+  gDifference(pre911.aea) %>%
+  st_as_sf() %>%
+  st_area
+
+area_burned_822_824 = gIntersection(perim.in, post824.aea) %>%
+  gDifference(pre822.aea) %>%
+  st_as_sf() %>%
+  st_area
+
+(area_burned_911 + area_burned_822_824) / 10000 # 6077
+
+8143-6077
+
+# vet by comparison with spread raster, not exact but should be ballpark
+spread.rast = mask(r.master, perim.in) 
+data.frame(spread_date = getValues(spread.rast)) %>%
+  filter(spread_date %in% c("822","824","911")) %>%
+  tally() * 30 * 30 / 10000 # 6053
+  
+# next use fire spread and previous fire perimeters to derive
+# area of young forest burned
+glade_reburn = gIntersection(perim.in, glade.aea) %>%
+  st_as_sf() %>%
+  st_area / 10000
+
+wilcox_reburn = gIntersection(perim.in, wilcox.aea) %>% 
+  st_as_sf() %>%
+  st_area / 10000
+
+huckadams_reburn = gIntersection(perim.in, lake.aea) %>% 
+  st_as_sf() %>%
+  st_area / 10000
+
+(glade_reburn + wilcox_reburn + huckadams_reburn) / 8143
+
+# compare to sev.old for gut check, should be < 57 % of fire perimeter
+old.df = data.frame(old_rdnbr = getValues(sev.old))
+old.df %>%
+  filter(!is.na(old_rdnbr)) %>%
+  tally() * 30 * 30 / 10000 / 8143 # 47%
+
+### fire weather calculations
+# read in raws data
+raws = read.table("data/GRTE_RAWS/GRTE_RAWS.txt", header=FALSE, skip=6, nrows=53)
+
+names(raws) = c("date","year","day","id","solar_rad_kWhm2","wind_speed_avg_mSec","wind_dir_deg","wind_speed_gust_mSec",
+                "air_temp_avg_C","air_temp_max_C","air_temp_min_C","rh_avg_pct","rh_max_pct","rh_min_ct","prec_mm")
+
+head(raws)
+
+# extreme weather days
+raws %>%
+  mutate(wind_speed_gust_kmHr = wind_speed_gust_mSec * 60*60 * 1/1000) %>%
+  filter(date %in% c("08/22/2016","08/23/2016","08/24/2016","09/11/2016")) %>%
+  summary()
+
+# moderate weather days
+raws %>%
+  mutate(wind_speed_gust_kmHr = wind_speed_gust_mSec * 60*60 * 1/1000) %>%
+  filter(!date %in% c("08/22/2016","08/23/2016","08/24/2016","09/11/2016")) %>%
+  summary()
+```
