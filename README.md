@@ -2,13 +2,10 @@
 
 ## see also
 
-This github repository is a copy of a permanent data deposit with the Environmental Data
-Initiative (EDI). It is also archived here for easier viewing of associated scripts, but this
-github repository does not include large data files. To download the full data deposit, go to:
-
-**Currently uploaded to Box for reviewers:** [https://uwmadison.box.com/s/gh3xc4a730wh5nttyeaua0r3xkpiw6dg](https://uwmadison.box.com/s/gh3xc4a730wh5nttyeaua0r3xkpiw6dg).
-
-**Data desposit citation:** TBD
+This github repository includes data and code associated with Braziunas et al. In review, Young forests
+and fire: Using lidar-imagery fusion to explore fuels and burn severity in a subalpine forest reburn.
+Data and code are provided here for peer review, and a permanent data deposit will be uploaded to
+the Environmental Data Initiative (EDI) upon publication.
 
 ## purpose
 
@@ -21,8 +18,7 @@ forest reburn
 
 ## organization and file descriptions
 
-Directory structure and files (refers to data deposit, not all folders and files will
-appear in this github repository):
+Directory structure and files:
 
 - `analysis/`: Results data.
   - `fuels_prediction_map/`: Summary statistics for field data, fuels models, and final fuels map.
@@ -61,7 +57,9 @@ appear in this github repository):
   - `GRTE_rasters`: Final fuels map rasters (in `final_fuels_map` folder) and rasters used in creating
       final fuels maps or performing manuscript analyses. These include a digital elevation model, lidar
       and imagery predictors at 30 m resolution, and vegetation map at 30 m resolution. Also includes a
-      `fuels_map_comparison` folder with unmasked version of canopy fuels for LANDFIRE comparison.
+      `fuels_map_comparison` folder with unmasked version of canopy fuels for LANDFIRE comparison. One
+      raster `grte_30m_naip_masked.tif` is not uploaded because it exceeds Github's file size limits,
+      but this can be created from data included here by running `step07_create_fuels_map.R`.
   - `GRTE_shps`: Outline of study region in which fuels were mapped.
 - `scripts`: R scripts used to recreate data and analyses. Scripts are numbered in order they were run.
   Scripts with `.R` can be rerun with data provided in deposit. Scripts with `.Rmd` require additional

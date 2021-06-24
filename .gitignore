@@ -1,4 +1,4 @@
 # files not to be tracked
 *.DS_Store
 *.Rproj*
-processed_data/GRTE_rasters/*
+processed_data/GRTE_rasters/grte_30m_naip_masked.tif
