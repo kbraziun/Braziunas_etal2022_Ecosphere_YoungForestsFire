@@ -814,6 +814,58 @@ hist(fuels.comb$Shrub_ht_m)
 hist(shrub.mod[["Shrub_pctDead"]])
 hist(fuels.comb$Shrub_pctDead)
 
+### quantify outliers
+# how many values had to be reclassified?
+out.pct = data.frame(var = c("CBD_kg_m3","CBH_m","CFL_kg_m2","CWD_cover_pct","CWD_Mg_ha","Shrub_cover_pct","Shrub_ht_m","BA_m2_ha","CC_pct","SH_m","TPH_trees","prop_sagebrush","Shrub_cover_pct","Shrub_ht_m","Shrub_pctDead"),
+                     veg_class = c(rep("conifer",7),rep("forest",4),rep("shrubland",4)),
+                     below_0 = c(length(conifer.mask[["CBD_kg_m3"]][conifer.mask[["CBD_kg_m3"]]<0]),
+                                 length(conifer.mask[["CBH_m"]][conifer.mask[["CBH_m"]]<0]),
+                                 length(conifer.mask[["CFL_kg_m2"]][conifer.mask[["CFL_kg_m2"]]<0]),
+                                 length(conifer.mask[["CWD_cover_pct"]][conifer.mask[["CWD_cover_pct"]]<0]),
+                                 length(conifer.mask[["CWD_Mg_ha"]][conifer.mask[["CWD_Mg_ha"]]<0]),
+                                 length(conifer.mask[["Shrub_cover_pct"]][conifer.mask[["Shrub_cover_pct"]]<0]),
+                                 length(conifer.mask[["Shrub_ht_m"]][conifer.mask[["Shrub_ht_m"]]<0]),
+                                 length(forest.mask[["BA_m2_ha"]][forest.mask[["BA_m2_ha"]]<0]),
+                                 length(forest.mask[["CC_pct"]][forest.mask[["CC_pct"]]<0]),
+                                 length(forest.mask[["SH_m"]][forest.mask[["SH_m"]]<0]),
+                                 length(forest.mask[["TPH_trees"]][forest.mask[["TPH_trees"]]<0]),
+                                 length(shrub.mask[["prop_sagebrush"]][shrub.mask[["prop_sagebrush"]]<0]),
+                                 length(shrub.mask[["Shrub_cover_pct"]][shrub.mask[["Shrub_cover_pct"]]<0]),
+                                 length(shrub.mask[["Shrub_ht_m"]][shrub.mask[["Shrub_ht_m"]]<0]),
+                                 length(shrub.mask[["Shrub_pctDead"]][shrub.mask[["Shrub_pctDead"]]<0])),
+                     above_max = c(length(conifer.mask[["CBD_kg_m3"]][conifer.mask[["CBD_kg_m3"]]>0.4]),
+                                   length(conifer.mask[["CBH_m"]][conifer.mask[["CBH_m"]]>5]),
+                                   length(conifer.mask[["CFL_kg_m2"]][conifer.mask[["CFL_kg_m2"]]>4]),
+                                   length(conifer.mask[["CWD_cover_pct"]][conifer.mask[["CWD_cover_pct"]]>50]),
+                                   length(conifer.mask[["CWD_Mg_ha"]][conifer.mask[["CWD_Mg_ha"]]>300]),
+                                   length(conifer.mask[["Shrub_cover_pct"]][conifer.mask[["Shrub_cover_pct"]]>100]),
+                                   length(conifer.mask[["Shrub_ht_m"]][conifer.mask[["Shrub_ht_m"]]>2]),
+                                   length(forest.mask[["BA_m2_ha"]][forest.mask[["BA_m2_ha"]]>75]),
+                                   length(forest.mask[["CC_pct"]][forest.mask[["CC_pct"]]>100]),
+                                   length(forest.mask[["SH_m"]][forest.mask[["SH_m"]]>70]),
+                                   length(forest.mask[["TPH_trees"]][forest.mask[["TPH_trees"]]>80000]),
+                                   length(shrub.mask[["prop_sagebrush"]][shrub.mask[["prop_sagebrush"]]>1]),
+                                   length(shrub.mask[["Shrub_cover_pct"]][shrub.mask[["Shrub_cover_pct"]]>100]),
+                                   length(shrub.mask[["Shrub_ht_m"]][shrub.mask[["Shrub_ht_m"]]>3.2]),
+                                   length(shrub.mask[["Shrub_pctDead"]][shrub.mask[["Shrub_pctDead"]]>100])),
+                     tot_cells = c(rep(length(conifer.mask[[1]][!is.na(conifer.mask[[1]])]),7),
+                                   rep(length(forest.mask[[1]][!is.na(forest.mask[[1]])]),4),
+                                   rep(length(shrub.mask[[1]][!is.na(shrub.mask[[1]])]),4))) %>%
+  mutate(below_0 = 100*below_0/tot_cells,
+         above_max = 100*above_max/tot_cells,
+         tot_out = below_0+above_max)
+
+out.pct %>%
+  filter(veg_class %in% c("forest","conifer")) %>%
+  summary()
+
+out.pct %>%
+  filter(veg_class %in% c("shrubland")) %>%
+  summary()
+
+out.pct %>%
+  summary()
+
 ### write final rasters
 
 # conifer

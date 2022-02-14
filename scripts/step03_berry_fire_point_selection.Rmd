@@ -167,9 +167,8 @@ plot(growthMod)
 ## 4. Differentiate young versus mature forest
 
 Within areas burned in 2016, for Q1 I identified reburns of young, ~30-year-old forest that had previously burned in
-1987 or 1988. Young forest included only areas that had burned at moderate or high severity in the first fire and
-then reburned at any severity in 2016 (this excluded areas within first fire perimeters that were unburned, increased greenness,
-or low severity). I identified mature forest as areas that burned in the Berry Fire and were outside of
+1987 or 1988. Young forest included only areas that had burned as stand-replacing fire (RdNBR > 675) in the first fire and
+then reburned at any severity in 2016. I identified mature forest as areas that burned in the Berry Fire and were outside of
 fire perimeters from 1987, 1988, and 2000.
 
 For Q1 comparison of young and mature forest fuels and burn severity, I minimized variation due solely
@@ -217,11 +216,11 @@ plot(sevHi.old)
 # glade and wilcox omitted from young forest due to small reburn area (glade) and different forest types (wilcox)
 
 # read in and mask fire severity based on huck x adams hill fire severity
-huck.mtbs = raster("data/MTBS/Lake_Creek/wy4415711051919880711/wy4415711051919880711_19860818_19890802_dnbr6.tif")
-huck.mask = reclassify(huck.mtbs, matrix(c(-Inf,2.9,NA,2.9,4.9,1,4.9,Inf,NA)))
+huck.mtbs = raster("data/MTBS/Lake_Creek/wy4415711051919880711/wy4415711051919880711_19860818_19890802_rdnbr.tif")
+huck.mask = reclassify(huck.mtbs, matrix(c(-Inf,675,NA,675,2000,1,2000,Inf,NA)))
 huck.cmask = crop(huck.mask,sev.con)
 
-# sev young is everything inside of lake perimeter that burned at mod to high severity
+# sev young is everything inside of lake perimeter that burned as stand-replacing fire
 sev.young = mask(sev.con, huck.cmask)
 
 # only high fire spread days, to keep fire weather similar

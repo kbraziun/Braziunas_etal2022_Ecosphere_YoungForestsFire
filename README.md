@@ -40,9 +40,6 @@ Directory structure and files:
       `Raw_data` folder with `GRTE_LiDAR_field_data_2019.xls` that includes associated metadata on sheet 1.
       Also includes `Cleaned_data` folder, with `.csv` outputs from R data cleaning script.
   - `GRTE_RAWS`: RAWS weather station data during the Berry Fire.
-  - `GRTE_Vegmap_Plots`: Shapefiles for field collected in 2002 and 2003 (in `2002_Plots` and `2003_Plots`
-      folders) and reclassified surface Fire Behavior Fuel Models (in `FBFM_Reclassification` folder) based
-      on plot photos and used in Appendix S3, Predicting and mapping surface FBFMs.
 - `processed_data`: Data created during analyses.
   - `Berry_Fire_sample_polys`: Shapefiles and associated lidar and imagery (NAIP) predictors for random
       samples of grid cells from the Berry Fire used to answer Q1 (files with `age` in title) and Q2
@@ -50,7 +47,7 @@ Directory structure and files:
   - `field_plot_selection`: Shapefiles for field plot footprints used in extracting lidar and imagery
       predictors for create linear regression models to predict fuels.
   - `fuels_map_variables`: Fuels used as dependence variables in linear regression models
-      (`field_plot_2019_fuels.csv`) or random forests (`fbfms_6categories.csv`). Lidar (`lidar_metrics.csv`)
+      (`field_plot_2019_fuels.csv`). Lidar (`lidar_metrics.csv`)
       and imagery (`naip_metrics.csv`) predictors for field plot footprints used in linear regression models.
       Also includes `fvs` folder with inputs and outputs from estimating fuels in Forest Vegetation
       Simulator software.
@@ -79,14 +76,12 @@ Directory structure and files:
   - `step06_fit_fuels_regressions.R`: Fit linear regression models to predict field-measured fuels from
       lidar and imagery predictors.
   - `step07_create_fuels_map.R`: Create lidar-imagery fusion fuels maps.
-  - `step08_fit_fbfms_randomForest.R`: Fit random forest classification models to predict surface
-      Fire Behavior Fuel models from lidar and imagery predictors.
-  - `step09_fuels_fit_analyses.R`: Use final linear regression models to predict fuels in field data
+  - `step08_fuels_fit_analyses.R`: Use final linear regression models to predict fuels in field data
       plots and generate summary data on model fits (predicted versus observed values).
-  - `step10_fuels_map_landfire_comparison.Rmd`: Compare predicted fuels from final lidar-imagery fusion fuels
+  - `step09_fuels_map_landfire_comparison.Rmd`: Compare predicted fuels from final lidar-imagery fusion fuels
       and LANDFIRE fuels maps (rasters) with field data observations (using centroids from field plots
       to extract corresponding raster values).
-  - `step11_fuels_severity_analyses.R`: Analyses for Q1 (fuels and burn severity in young versus mature
+  - `step10_fuels_severity_analyses.R`: Analyses for Q1 (fuels and burn severity in young versus mature
       forests) and Q2 (how well fuels predict burn severity under extreme versus moderate fire weather).
 
 ## platforms

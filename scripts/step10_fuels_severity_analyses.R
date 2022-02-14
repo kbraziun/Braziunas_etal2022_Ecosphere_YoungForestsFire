@@ -209,15 +209,17 @@ summary(wx.fuels)
 
 ### apply the same cut-offs as used in the fuels map when applicable
 summary(age.fuels)
-# TPH btwn 0-80000 good, BA 0+ good, CC 0-100 good, CH 0+ good, CFL 0-4 good,
-# CBD needs fixed, <0 value, upper limit 0.4 good
+# TPH btwn 0-80000 good, BA 0+ good, CFL 0-4 good, CBD 0-0.4 good
+# CC needs fixed, <0 value, upper limit 100 good
+# CH needs fixeds, <0 value
 # CBH 0-5 good, CWD cover 0-50 good
 # CWD biomass needs fixed, lower limit 0 good, upper limit > 300 present
 # Shrub_cover needs fixed, <0 value, upper limit 100 good
 # Shrub_ht needs fixed, <0 value, upper limit 2 good
 
 age.sub = age.fuels %>%
-  mutate(CBD_kg_m3=ifelse(CBD_kg_m3<0,0,CBD_kg_m3),
+  mutate(CC_pct=ifelse(CC_pct<0,0,CC_pct),
+         CH_m=ifelse(CH_m<0,0,CH_m),
          CWD_cover_pct=ifelse(CWD_cover_pct<0,0,CWD_cover_pct),
          CWD_Mg_ha = ifelse(CWD_Mg_ha>300,300,CWD_Mg_ha),
          Shrub_cover_pct=ifelse(Shrub_cover_pct<0,0,Shrub_cover_pct),
@@ -290,24 +292,24 @@ young.sub = matched_data %>% filter(age=="young")
 old.sub = matched_data %>% filter(age=="old")
 
 # default values are two-sided
-wilcox.test(young.sub$TPH_trees, old.sub$TPH_trees) # p < 0.001, p = 0.000000014
-wilcox.test(young.sub$BA_m2_ha, old.sub$BA_m2_ha) # ns, p = 0.22
-wilcox.test(young.sub$CC_pct, old.sub$CC_pct) # p < 0.01, p = 0.0020
-wilcox.test(young.sub$CH_m, old.sub$CH_m) # p < 0.001, p = 0.0000000000031
-wilcox.test(young.sub$CFL_kg_m2, old.sub$CFL_kg_m2) # ns, p = 0.64
-wilcox.test(young.sub$CBD_kg_m3, old.sub$CBD_kg_m3) # p < 0.001, p = 0.0000066
-wilcox.test(young.sub$CBH_m, old.sub$CBH_m) # ns, p = 0.60
-wilcox.test(young.sub$CWD_cover_pct, old.sub$CWD_cover_pct) # p < 0.001, p = 0.000072
-wilcox.test(young.sub$CWD_Mg_ha, old.sub$CWD_Mg_ha) # ns, p = 0.72
-wilcox.test(young.sub$Shrub_cover_pct, old.sub$Shrub_cover_pct) # p < 0.05, p = 0.0028
-wilcox.test(young.sub$Shrub_ht_m, old.sub$Shrub_ht_m) # ns, p = 0.38
-wilcox.test(young.sub$rdnbr, old.sub$rdnbr) # ns, p = 0.34
-wilcox.test(young.sub$elev_m, old.sub$elev_m) # ns, p = 0.55
-wilcox.test(young.sub$slope_deg, old.sub$slope_deg) # ns, p = 0.10
+wilcox.test(young.sub$TPH_trees, old.sub$TPH_trees) # p < 0.001, p = 0.00000012
+wilcox.test(young.sub$BA_m2_ha, old.sub$BA_m2_ha) # ns, p = 0.33
+wilcox.test(young.sub$CC_pct, old.sub$CC_pct) # p < 0.01, p = 0.0014
+wilcox.test(young.sub$CH_m, old.sub$CH_m) # p < 0.001, p = 0.0000000000015
+wilcox.test(young.sub$CFL_kg_m2, old.sub$CFL_kg_m2) # ns, p = 0.59
+wilcox.test(young.sub$CBD_kg_m3, old.sub$CBD_kg_m3) # p < 0.001, p = 0.000016
+wilcox.test(young.sub$CBH_m, old.sub$CBH_m) # ns, p = 0.19
+wilcox.test(young.sub$CWD_cover_pct, old.sub$CWD_cover_pct) # p < 0.05, p = 0.011
+wilcox.test(young.sub$CWD_Mg_ha, old.sub$CWD_Mg_ha) # ns, p = 0.12
+wilcox.test(young.sub$Shrub_cover_pct, old.sub$Shrub_cover_pct) # p < 0.001, p = 0.000773
+wilcox.test(young.sub$Shrub_ht_m, old.sub$Shrub_ht_m) # ns, p = 0.21
+wilcox.test(young.sub$rdnbr, old.sub$rdnbr) # ns, p = 0.29
+wilcox.test(young.sub$elev_m, old.sub$elev_m) # ns, p = 0.75
+wilcox.test(young.sub$slope_deg, old.sub$slope_deg) # ns, p = 0.54
 
 # examine median rdnbr
 # stand replacing severity is RdNBR = 675 per Harvey et al. 2016
-summary(young.sub$rdnbr) # median > 675, ~709
+summary(young.sub$rdnbr) # median ~675, ~667
 summary(old.sub$rdnbr) # median > 675, ~758
 
 summary(young.sub)
