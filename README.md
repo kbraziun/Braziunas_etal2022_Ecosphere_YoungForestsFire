@@ -1,20 +1,18 @@
-# readme for Braziunas et al. in review Young Forests and Fire manuscript
+# readme for Braziunas et al. 2022 Young Forests and Fire manuscript
 
 ## see also
 
-This github repository includes data and code associated with Braziunas et al. In review, Young forests
-and fire: Using lidar-imagery fusion to explore fuels and burn severity in a subalpine forest reburn.
-Data and code are provided here for peer review, and a permanent data deposit will be uploaded to
-the Environmental Data Initiative (EDI) upon publication.
+This github repository includes data and code associated with: Braziunas, K. H., D. C. Abendroth,
+and M. G. Turner. 2022. Young forests and fire: Using lidar-imagery fusion to explore fuels and burn 
+severity in a subalpine forest reburn. Ecosphere 13:e4096.
+[https://doi.org/10.1002/ecs2.4096](https://doi.org/10.1002/ecs2.4096)
+
+Data and code are deposited at the Environmental Data Initiative (EDI): Braziunas, K.H., M.G. Turner, and D.C. Abendroth. 2022. Young forests and fire: Using lidar-imagery fusion to explore fuels and burn severity in a subalpine forest reburn, Grand Teton National Park, Wyoming. ver 1. Environmental Data Initiative. [https://doi.org/10.6073/pasta/4f6864a8c7bb0f712d0443fbb334c73e](https://doi.org/10.6073/pasta/4f6864a8c7bb0f712d0443fbb334c73e)
 
 ## purpose
 
 This readme gives an overview of directory structure, files, and steps for recreating
-outputs and analyses associated with Braziunas et al. in review.
-
-**Manuscript citation:** Braziunas, K.H., D.C. Abendroth, and M.G. Turner. In review. Young
-forests and fire: Using lidar-imagery fusion to explore fuels and burn severity in a subalpine
-forest reburn
+outputs and analyses associated with Braziunas et al. 2022.
 
 ## organization and file descriptions
 
